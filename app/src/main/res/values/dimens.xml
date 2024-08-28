@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="corners">16dp</dimen>
+    <dimen name="icon_padding">8dp</dimen>
+    <dimen name="setttings_menu_items_height">61dp</dimen>
+    <dimen name="setttings_menu_items_font_size">16sp</dimen>
+</resources>
