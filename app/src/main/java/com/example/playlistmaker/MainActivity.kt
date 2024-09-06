@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
 
         val button = findViewById<Button>(R.id.find)
         val imageClickListener: View.OnClickListener = object : View.OnClickListener { override fun onClick(v: View?) {
-//            Toast.makeText(this@MainActivity, "Нажата кнопка Поиск", Toast.LENGTH_SHORT).show()
             val displayIntent = Intent(this@MainActivity, FindActivity::class.java)
             startActivity(displayIntent)
         }
@@ -32,12 +31,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.media).setOnClickListener {
             val displayIntent = Intent(this, MediaActivity::class.java)
             startActivity(displayIntent)
-//            Toast.makeText(this@MainActivity, "Нажата кнопка Медиатека", Toast.LENGTH_SHORT).show()
         }
         findViewById<Button>(R.id.settings).setOnClickListener {
             val displayIntent = Intent(this, SettingsActivity::class.java)
             startActivity(displayIntent)
-//            Toast.makeText(this@MainActivity, "Нажата кнопка Настройки", Toast.LENGTH_SHORT).show()
         }
     }
 

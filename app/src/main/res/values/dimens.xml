@@ -4,4 +4,8 @@
     <dimen name="icon_padding">8dp</dimen>
     <dimen name="setttings_menu_items_height">61dp</dimen>
     <dimen name="setttings_menu_items_font_size">16sp</dimen>
+    <dimen name="title_font_size">22sp</dimen>
+    <dimen name="margins">16dp</dimen>
+    <dimen name="image_width">24dp</dimen>
+    <dimen name="image_height">24dp</dimen>
 </resources>
