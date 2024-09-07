@@ -2,6 +2,7 @@ package com.example.playlistmaker
 
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -18,7 +19,7 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        findViewById<ImageView>(R.id.back).setOnClickListener {
+        findViewById<Toolbar>(R.id.back).setOnClickListener {
             finish()
         }
 
