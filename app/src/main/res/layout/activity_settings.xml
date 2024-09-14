@@ -22,16 +22,19 @@
         android:text="@string/dark_theme"/>
 
     <TextView
+        android:id="@+id/share"
         style="@style/SettingsActivityIcons"
         android:text="@string/share"
         android:drawableEnd="@drawable/share_icon"/>
 
     <TextView
+        android:id="@+id/support"
         style="@style/SettingsActivityIcons"
         android:text="@string/support"
         android:drawableEnd="@drawable/support_icon"/>
 
     <TextView
+        android:id="@+id/agreement"
         style="@style/SettingsActivityIcons"
         android:text="@string/agreement"
         android:drawableEnd="@drawable/agreement_icon"/>
