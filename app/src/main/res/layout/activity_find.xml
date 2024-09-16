@@ -1,10 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FindActivity">
+    android:layout_gravity="center"
+    tools:context=".FindActivity"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Toolbar
+        android:id="@+id/backFromFind"
+        style="@style/ToolBarStyle"
+        android:title="@string/title_find"
+        >
+    </Toolbar>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margins"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/findEditText"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:hint="@string/title_find"
+            android:maxLength="50"
+            android:maxLines="1"
+            android:inputType="text"
+            android:drawableStart="@drawable/find_icon"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:background="@drawable/rounded_edittext"
+            />
+
+        <ImageView
+            android:id="@+id/clearIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:src="@drawable/clear_icon"
+            android:background="@android:color/transparent"
+            android:visibility="gone"
+            />
+    </FrameLayout>
+</LinearLayout>
+

@@ -12,7 +12,6 @@
     <Toolbar
         android:id="@+id/back"
         style="@style/ToolBarStyle"
-        android:navigationIcon="@drawable/back_icon"
         android:title="@string/title_settings"
         >
     </Toolbar>
