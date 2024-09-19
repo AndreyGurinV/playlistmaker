@@ -17,7 +17,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class FindActivity : AppCompatActivity() {
-    private var searchText: String = FindActivity.SEARCH_TEXT_DEF
+    private var searchText: String = SEARCH_TEXT_DEF
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
         const val SEARCH_TEXT_DEF = ""

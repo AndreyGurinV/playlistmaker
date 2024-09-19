@@ -2,11 +2,13 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <item name="android:background">@color/white</item>
+<!--        <item name="android:background">@color/white</item>-->
          <item name="colorPrimary">@color/button_text</item>
          <item name="colorSecondary">@color/grey</item>
+        <item name="colorOnBackground">@color/white</item>
         <item name="colorPrimaryVariant">@color/back</item>
         <item name="colorControlActivated">@color/yp_blue</item>
+
     </style>
 
     <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker" />
