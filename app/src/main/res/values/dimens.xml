@@ -8,4 +8,6 @@
     <dimen name="margins">16dp</dimen>
     <dimen name="image_width">24dp</dimen>
     <dimen name="image_height">24dp</dimen>
+    <dimen name="find_edit_text_h_padding">36dp</dimen>
+    <dimen name="find_images_padding">12dp</dimen>
 </resources>

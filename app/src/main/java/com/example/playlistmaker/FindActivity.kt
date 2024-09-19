@@ -1,12 +1,15 @@
 package com.example.playlistmaker
 
+import android.content.Context
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +32,7 @@ class FindActivity : AppCompatActivity() {
             insets
         }
 
-        findViewById<Toolbar>(R.id.backFromFind).setOnClickListener {
+        findViewById<Toolbar>(R.id.backFromFind).setNavigationOnClickListener {
             finish()
         }
 
@@ -38,6 +41,8 @@ class FindActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(findViewById<LinearLayout>(R.id.main).windowToken, 0)
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -47,6 +52,7 @@ class FindActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearButton.visibility = clearButtonVisibility(s)
                 searchText = s.toString()
+                inputEditText.setSelection(searchText.length)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -75,7 +81,10 @@ class FindActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState, persistentState)
         if (savedInstanceState != null) {
             searchText = savedInstanceState.getString(SEARCH_TEXT, SEARCH_TEXT_DEF)
-            findViewById<EditText>(R.id.findEditText).setText(searchText)
+            findViewById<EditText>(R.id.findEditText).apply {
+                setText(searchText)
+                setSelection(searchText.length)
+            }
         }
     }
 }

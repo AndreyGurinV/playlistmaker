@@ -21,7 +21,7 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        findViewById<Toolbar>(R.id.back).setOnClickListener {
+        findViewById<Toolbar>(R.id.back).setNavigationOnClickListener {
             finish()
         }
 

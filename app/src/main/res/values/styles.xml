@@ -6,6 +6,7 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
         <item name="android:textSize">@dimen/title_font_size</item>
+        <item name="android:titleTextColor">@color/black</item>
         <item name="android:navigationIcon">@drawable/back_icon</item>
     </style>
     <style name="ButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
@@ -33,6 +34,26 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+    <style name="EditTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:textSize">@dimen/setttings_menu_items_font_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/text_grey</item>
+        <item name="android:background">@drawable/rounded_edittext</item>
+    </style>
+    <style name="FindIconStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:src">@drawable/find_icon2</item>
+    </style>
+    <style name="ClearIconStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:src">@drawable/clear_icon2</item>
     </style>
 </resources>
 
