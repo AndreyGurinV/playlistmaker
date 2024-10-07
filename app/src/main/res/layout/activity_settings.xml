@@ -11,49 +11,31 @@
 
     <Toolbar
         android:id="@+id/back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:navigationIcon="@drawable/back_icon"
+        style="@style/ToolBarStyle"
         android:title="@string/title_settings"
         >
     </Toolbar>
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/margins"
-        android:textSize="@dimen/setttings_menu_items_font_size"
+        style="@style/SettingsActivityIcons"
         android:text="@string/dark_theme"/>
 
-
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:id="@+id/share"
+        style="@style/SettingsActivityIcons"
         android:text="@string/share"
-        android:textColor="@color/button_text"
-        android:textSize="@dimen/setttings_menu_items_font_size"
-        android:padding="@dimen/margins"
         android:drawableEnd="@drawable/share_icon"/>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:id="@+id/support"
+        style="@style/SettingsActivityIcons"
         android:text="@string/support"
-        android:textColor="@color/button_text"
-        android:textSize="@dimen/setttings_menu_items_font_size"
-        android:padding="@dimen/margins"
         android:drawableEnd="@drawable/support_icon"/>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:id="@+id/agreement"
+        style="@style/SettingsActivityIcons"
         android:text="@string/agreement"
-        android:textColor="@color/button_text"
-        android:textSize="@dimen/setttings_menu_items_font_size"
-        android:padding="@dimen/margins"
         android:drawableEnd="@drawable/agreement_icon"/>
 
 </LinearLayout>

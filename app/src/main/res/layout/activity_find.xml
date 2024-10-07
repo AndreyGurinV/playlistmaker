@@ -1,10 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FindActivity">
+    android:background="?attr/colorOnBackground"
+    android:layout_gravity="center"
+    tools:context=".FindActivity"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Toolbar
+        android:id="@+id/backFromFind"
+        style="@style/ToolBarStyle"
+        android:title="@string/title_find"
+        >
+    </Toolbar>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/margins"
+        >
+        <EditText
+            android:id="@+id/findEditText"
+            style="@style/EditTextStyle"
+            android:paddingHorizontal="@dimen/find_edit_text_h_padding"
+            android:hint="@string/title_find"
+            android:maxLength="50"
+            android:maxLines="1"
+            android:inputType="text"
+            android:cursorVisible="true"
+            />
+        <ImageView
+            android:id="@+id/findIcon"
+            style="@style/FindIconStyle"
+            android:paddingStart="@dimen/find_images_padding"
+            android:layout_gravity="start"
+            android:background="@android:color/transparent"
+            />
+
+        <ImageView
+            android:id="@+id/clearIcon"
+            style="@style/ClearIconStyle"
+            android:layout_gravity="end"
+            android:paddingEnd="@dimen/find_images_padding"
+            android:background="@android:color/transparent"
+            android:visibility="gone"
+            />
+    </FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+</LinearLayout>
+
