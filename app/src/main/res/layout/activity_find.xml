@@ -32,7 +32,8 @@
             android:maxLines="1"
             android:inputType="text"
             android:cursorVisible="true"
-            />
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
         <ImageView
             android:id="@+id/findIcon"
             style="@style/FindIconStyle"
@@ -50,6 +51,44 @@
             android:visibility="gone"
             />
     </FrameLayout>
+    <ImageView
+        android:id="@+id/placeholderNothingIcon"
+        style="@style/PlaceholderNothingIconStyle"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent"
+        android:padding="@dimen/margins"
+        android:visibility="gone"
+        />
+    <ImageView
+        android:id="@+id/placeholderErrorIcon"
+        style="@style/PlaceholderErrorIconStyle"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent"
+        android:padding="@dimen/margins"
+        android:visibility="gone"
+        />
+    <TextView
+        android:id="@+id/placeholderText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="@dimen/margins"
+        android:text="No Reply"
+        android:textColor="?attr/colorPrimary"
+        style="@style/PlaceholderErrorTextStyle"
+        android:paddingBottom="@dimen/margins_24"
+        android:visibility="gone"
+        />
+    <Button
+        android:id="@+id/updateSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:iconTint="@color/button_text"
+        android:text="@string/button_update"
+        android:visibility="gone"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
