@@ -6,7 +6,9 @@
     <dimen name="track_info_font_size">11sp</dimen>
     <dimen name="setttings_menu_items_font_size">16sp</dimen>
     <dimen name="title_font_size">22sp</dimen>
+    <dimen name="error_font_size_19">19sp</dimen>
     <dimen name="margins">16dp</dimen>
+    <dimen name="margins_24">24dp</dimen>
     <dimen name="image_width">24dp</dimen>
     <dimen name="image_height">24dp</dimen>
     <dimen name="album_image_size">45dp</dimen>
