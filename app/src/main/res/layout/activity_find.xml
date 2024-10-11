@@ -11,7 +11,7 @@
     android:orientation="vertical">
 
     <Toolbar
-        android:id="@+id/backFromFind"
+        android:id="@+id/tbBackFromFind"
         style="@style/ToolBarStyle"
         android:title="@string/title_find"
         >
@@ -24,7 +24,7 @@
         android:padding="@dimen/margins"
         >
         <EditText
-            android:id="@+id/findEditText"
+            android:id="@+id/etFind"
             style="@style/EditTextStyle"
             android:paddingHorizontal="@dimen/find_edit_text_h_padding"
             android:hint="@string/title_find"
@@ -43,7 +43,7 @@
             />
 
         <ImageView
-            android:id="@+id/clearIcon"
+            android:id="@+id/ivClear"
             style="@style/ClearIconStyle"
             android:layout_gravity="end"
             android:paddingEnd="@dimen/find_images_padding"
@@ -52,7 +52,7 @@
             />
     </FrameLayout>
     <ImageView
-        android:id="@+id/placeholderNothingIcon"
+        android:id="@+id/ivPlaceholderNothing"
         style="@style/PlaceholderNothingIconStyle"
         android:layout_gravity="center"
         android:background="@android:color/transparent"
@@ -60,7 +60,7 @@
         android:visibility="gone"
         />
     <ImageView
-        android:id="@+id/placeholderErrorIcon"
+        android:id="@+id/ivPlaceholderError"
         style="@style/PlaceholderErrorIconStyle"
         android:layout_gravity="center"
         android:background="@android:color/transparent"
@@ -68,19 +68,20 @@
         android:visibility="gone"
         />
     <TextView
-        android:id="@+id/placeholderText"
+        android:id="@+id/tvPlaceholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:textAlignment="center"
         android:paddingTop="@dimen/margins"
-        android:text="No Reply"
+        android:text="@string/something_went_wrong"
         android:textColor="?attr/colorPrimary"
         style="@style/PlaceholderErrorTextStyle"
         android:paddingBottom="@dimen/margins_24"
         android:visibility="gone"
         />
     <Button
-        android:id="@+id/updateSearch"
+        android:id="@+id/btnUpdateSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

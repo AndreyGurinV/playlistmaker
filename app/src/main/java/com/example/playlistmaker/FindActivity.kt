@@ -18,6 +18,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -28,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class FindActivity : AppCompatActivity() {
     private var searchText: String = SEARCH_TEXT_DEF
-    private var trackList :ArrayList<Track> = arrayListOf()//initTrackList()
+    private var trackList :ArrayList<Track> = arrayListOf()
     lateinit var adapter: TracksAdapter
 
     private lateinit var inputEditText: EditText
@@ -46,10 +47,6 @@ class FindActivity : AppCompatActivity() {
 
     private val itunesService = retrofit.create(ItunesAPI::class.java)
 
-    companion object {
-        const val SEARCH_TEXT = "SEARCH_TEXT"
-        const val SEARCH_TEXT_DEF = ""
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -60,16 +57,16 @@ class FindActivity : AppCompatActivity() {
             insets
         }
 
-        findViewById<Toolbar>(R.id.backFromFind).setNavigationOnClickListener {
+        findViewById<Toolbar>(R.id.tbBackFromFind).setNavigationOnClickListener {
             finish()
         }
 
-        inputEditText = findViewById(R.id.findEditText)
-        val clearButton = findViewById<ImageView>(R.id.clearIcon)
-        updateButton = findViewById(R.id.updateSearch)
-        placeholderMessage = findViewById(R.id.placeholderText)
-        imageNothing = findViewById(R.id.placeholderNothingIcon)
-        imageError = findViewById(R.id.placeholderErrorIcon)
+        inputEditText = findViewById(R.id.etFind)
+        val clearButton = findViewById<ImageView>(R.id.ivClear)
+        updateButton = findViewById(R.id.btnUpdateSearch)
+        placeholderMessage = findViewById(R.id.tvPlaceholder)
+        imageNothing = findViewById(R.id.ivPlaceholderNothing)
+        imageError = findViewById(R.id.ivPlaceholderError)
 
         updateButton.setOnClickListener { sendSearchRequest() }
 
@@ -131,34 +128,34 @@ class FindActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState, persistentState)
         if (savedInstanceState != null) {
             searchText = savedInstanceState.getString(SEARCH_TEXT, SEARCH_TEXT_DEF)
-            findViewById<EditText>(R.id.findEditText).apply {
+            findViewById<EditText>(R.id.etFind).apply {
                 setText(searchText)
                 setSelection(searchText.length)
             }
         }
     }
 
-    private fun showMessage(text: String, additionalMessage: String) {
+    private fun showMessage(text: String, isError: Boolean) {
         if (text.isNotEmpty()) {
             placeholderMessage.visibility = View.VISIBLE
             trackList.clear()
             adapter.notifyDataSetChanged()
-            if (additionalMessage.isNotEmpty()) {
-                imageError.visibility = View.VISIBLE
-                imageNothing.visibility = View.GONE
-                placeholderMessage.text = text + "\n" + additionalMessage
-                updateButton.visibility = View.VISIBLE
-            } else {
-                imageError.visibility = View.GONE
-                imageNothing.visibility = View.VISIBLE
+            if (isError) {
+                imageError.isVisible = true
+                imageNothing.isVisible = false
                 placeholderMessage.text = text
-                updateButton.visibility = View.GONE
+                updateButton.isVisible = true
+            } else {
+                imageError.isVisible = false
+                imageNothing.isVisible = true
+                placeholderMessage.text = text
+                updateButton.isVisible = false
             }
         } else {
-            placeholderMessage.visibility = View.GONE
-            imageNothing.visibility = View.GONE
-            imageError.visibility = View.GONE
-            updateButton.visibility = View.GONE
+            placeholderMessage.isVisible = false
+            imageNothing.isVisible = false
+            imageError.isVisible = false
+            updateButton.isVisible = false
         }
     }
 
@@ -169,24 +166,24 @@ class FindActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<TracksResponse>,
                                         response: Response<TracksResponse>
                 ) {
-                    if (response.code() == 200) {
+                    if (response.code() == REQUEST_OK) {
                         trackList.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
                             trackList.addAll(response.body()?.results!!)
                             adapter.notifyDataSetChanged()
                         }
                         if (trackList.isEmpty()) {
-                            showMessage(getString(R.string.nothing_found), "")
+                            showMessage(getString(R.string.nothing_found), false)
                         } else {
-                            showMessage("", "")
+                            showMessage("", false)
                         }
                     } else {
-                        showMessage(getString(R.string.something_went_wrong), response.code().toString())
+                        showMessage(getString(R.string.something_went_wrong), true)
                     }
                 }
 
                 override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                    showMessage(getString(R.string.something_went_wrong), t.message.toString())
+                    showMessage(getString(R.string.something_went_wrong), true)
                 }
 
             })
@@ -194,5 +191,10 @@ class FindActivity : AppCompatActivity() {
 
     }
 
+    companion object {
+        const val REQUEST_OK = 200
+        const val SEARCH_TEXT = "SEARCH_TEXT"
+        const val SEARCH_TEXT_DEF = ""
+    }
 }
 
