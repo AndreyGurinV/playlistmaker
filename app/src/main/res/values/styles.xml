@@ -69,6 +69,22 @@
         <item name="android:textFontWeight">400</item>
         <item name="android:textColor">@color/text_grey</item>
     </style>
+    <style name="PlaceholderNothingIconStyle">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">120dp</item>
+        <item name="android:src">@drawable/nothing_find_icon</item>
+    </style>
+    <style name="PlaceholderErrorIconStyle">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">120dp</item>
+        <item name="android:src">@drawable/error_find_icon</item>
+    </style>
+    <style name="PlaceholderErrorTextStyle">
+        <item name="android:textSize">@dimen/error_font_size_19</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">@color/back_night</item>
+    </style>
 </resources>
 
 

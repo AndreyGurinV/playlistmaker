@@ -6,6 +6,7 @@
     <string name="button_find">Поиск</string>
     <string name="button_media">Медиатека</string>
     <string name="button_settings">Настройки</string>
+    <string name="button_update">Обновить</string>
     <string name="dark_theme">Темная тема</string>
     <string name="share">Поделиться приложением</string>
     <string name="support">Написать в поддержку</string>
@@ -15,4 +16,6 @@
     <string name="message_for_developers">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="subject_for_developers">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="my_email">gurin.andreygv@yandex.ru</string>
+    <string name="nothing_found">Ничего не нашлось</string>
+    <string name="something_went_wrong">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
 </resources>
