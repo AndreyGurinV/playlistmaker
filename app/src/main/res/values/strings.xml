@@ -18,4 +18,6 @@
     <string name="my_email">gurin.andreygv@yandex.ru</string>
     <string name="nothing_found">Ничего не нашлось</string>
     <string name="something_went_wrong">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="search_history">Вы искали</string>
+    <string name="button_clear_search_history">Очистить историю</string>
 </resources>

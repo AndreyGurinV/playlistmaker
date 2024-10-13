@@ -17,6 +17,7 @@
     </Toolbar>
 
     <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/themeSwitcher"
         style="@style/SettingsActivityIcons"
         android:text="@string/dark_theme"/>
 
