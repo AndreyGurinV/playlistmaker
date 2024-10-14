@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 
 class SearchHistory(val sp: SharedPreferences) {
+    val USER_KEY = "PlayListMakerHistory"
     fun load(): Array<Track> {
         val json = sp.getString(USER_KEY, null) ?: return emptyArray()
         return Gson().fromJson(json, Array<Track>::class.java)
@@ -38,7 +39,6 @@ class SearchHistory(val sp: SharedPreferences) {
             .apply()
     }
     companion object {
-        const val USER_KEY = "PlayListMakerHistory"
         const val MAX_HISTORY_SIZE = 10
     }
 }

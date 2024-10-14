@@ -26,8 +26,8 @@ class App :Application(){
             .putBoolean(USER_KEY, darkThemeEnabled)
             .apply()
     }
+
     companion object {
         const val USER_KEY = "PlayListMakerTheme"
     }
-
 }

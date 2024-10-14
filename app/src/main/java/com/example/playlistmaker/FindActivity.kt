@@ -64,6 +64,7 @@ class FindActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         searchHistory = SearchHistory(getSharedPreferences(PLAY_LIST_PREFERENCES, MODE_PRIVATE))
 
         findViewById<Toolbar>(R.id.tbBackFromFind).setNavigationOnClickListener {
@@ -84,6 +85,7 @@ class FindActivity : AppCompatActivity() {
             trackList.clear()
             adapter.notifyDataSetChanged()
             searchHistory.clear()
+            showSearchHistory(false)
         }
 
         clearButton.setOnClickListener {
@@ -122,8 +124,12 @@ class FindActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         adapter = TracksAdapter(trackList) {
-            if (!tvSearchHistory.isVisible)
-                searchHistory.addToHistory(track = it)
+            searchHistory.addToHistory(track = it)
+            if (tvSearchHistory.isVisible) {
+                trackList.clear()
+                trackList.addAll(searchHistory.load())
+                adapter.notifyDataSetChanged()
+            }
         }
         recyclerView.adapter = adapter
         showSearchHistory(true)
@@ -178,20 +184,22 @@ class FindActivity : AppCompatActivity() {
             imageError.isVisible = false
             btnUpdate.isVisible = false
         }
-//        showSearchHistory(false)
     }
 
     private fun showSearchHistory(visible: Boolean) {
         trackList.clear()
         if (visible) {
-            val ss = searchHistory.load()
-            println("loaded list = ${ss.size}")
-            trackList.addAll(ss)
+            with(searchHistory.load()) {
+                trackList.addAll(this)
+                tvSearchHistory.isVisible = isNotEmpty()
+                btnClearHistory.isVisible = isNotEmpty()
+            }
+        } else {
+            tvSearchHistory.isVisible = false
+            btnClearHistory.isVisible = false
         }
         adapter.notifyDataSetChanged()
 
-        tvSearchHistory.isVisible = visible
-        btnClearHistory.isVisible = visible
     }
     private fun sendSearchRequest() {
         if (etSearch.text.isNotEmpty()) {
