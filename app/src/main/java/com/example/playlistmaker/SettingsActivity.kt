@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,6 +20,13 @@ class SettingsActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        with(findViewById<SwitchMaterial>(R.id.themeSwitcher)){
+            this.isChecked = (applicationContext as App).darkTheme
+            this.setOnCheckedChangeListener { switcher, checked ->
+                (applicationContext as App).switchTheme(checked)
+            }
         }
 
         findViewById<Toolbar>(R.id.back).setNavigationOnClickListener {
