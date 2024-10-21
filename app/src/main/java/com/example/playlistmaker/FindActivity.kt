@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Editable
@@ -130,6 +131,9 @@ class FindActivity : AppCompatActivity() {
                 trackList.addAll(searchHistory.load())
                 adapter.notifyDataSetChanged()
             }
+            val displayIntent = Intent(this@FindActivity, PlayerActivity::class.java)
+            displayIntent.putExtra("track", it)
+            startActivity(displayIntent)
         }
         recyclerView.adapter = adapter
         showSearchHistory(true)
