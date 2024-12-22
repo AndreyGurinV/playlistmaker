@@ -16,6 +16,7 @@ class Track (
     var releaseDate: String, // Год релиза трека
     var primaryGenreName: String, // Жанр трека
     var country: String, // Страна исполнителя
+    var previewUrl: String, // Ссыдка на отрывок песни
 ): Serializable {
 
     fun getCoverArtwork() = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")

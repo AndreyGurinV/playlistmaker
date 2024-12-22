@@ -1,6 +1,10 @@
 package com.example.playlistmaker
 
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toolbar
@@ -21,7 +25,15 @@ class PlayerActivity() : AppCompatActivity() {
     private lateinit var tvReleaseDate: TextView
     private lateinit var tvPrimaryGenreName: TextView
     private lateinit var tvCountry: TextView
+    private lateinit var btnPlay: ImageButton
+    private lateinit var tvCurrentTime: TextView
 
+    private var mediaPlayer = MediaPlayer()
+    private var playerState = STATE_DEFAULT
+    private val handler = Handler(Looper.getMainLooper())
+    private val playRunnable = createUpdateTimerTask()
+
+    var currentTimeSecs = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,10 +53,26 @@ class PlayerActivity() : AppCompatActivity() {
         tvPrimaryGenreName = findViewById(R.id.tvPrimaryGenreName)
         tvCountry = findViewById(R.id.tvCountry)
 
+        tvCurrentTime = findViewById(R.id.tvCurrentTime)
+        btnPlay = findViewById(R.id.btnPlay)
+        btnPlay.setOnClickListener {
+            playbackControl()
+        }
+
         findViewById<Toolbar>(R.id.tbBackFromPlayer).setNavigationOnClickListener {
             finish()
         }
         setCurrentTrack(track = intent.extras?.getSerializable("track") as Track)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
     }
 
     fun setCurrentTrack(track: Track) {
@@ -61,5 +89,70 @@ class PlayerActivity() : AppCompatActivity() {
         tvReleaseDate.text = track.getReleaseYear()
         tvPrimaryGenreName.text = track.primaryGenreName
         tvCountry.text = track.country
+
+        preparePlayer(track.previewUrl)
+    }
+
+    private fun preparePlayer(url: String) {
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            btnPlay.isEnabled = true
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+//            btnPlay.text = "PLAY"
+            btnPlay.setImageResource(R.drawable.dark_mode_play_icon)
+            playerState = STATE_PREPARED
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        btnPlay.setImageResource(R.drawable.dark_mode_pause_icon)
+        playerState = STATE_PLAYING
+        handler.postDelayed(playRunnable, DELAY)
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        btnPlay.setImageResource(R.drawable.dark_mode_play_icon)
+        playerState = STATE_PAUSED
+        handler.removeCallbacks(playRunnable)
+        tvCurrentTime.text = String.format("%d:%02d", currentTimeSecs / 60, currentTimeSecs % 60)
+    }
+
+    private fun playbackControl() {
+        when(playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+
+    private fun createUpdateTimerTask(): Runnable {
+        return object : Runnable {
+            override fun run() {
+                currentTimeSecs++
+                if (currentTimeSecs < 30) {
+                    tvCurrentTime.text = String.format("%d:%02d", currentTimeSecs / 60, currentTimeSecs % 60)
+                    handler.postDelayed(this, DELAY)
+                } else {
+                    currentTimeSecs = 0
+                    pausePlayer()
+                }
+            }
+        }
+    }
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+
+        private const val DELAY = 1000L
     }
 }

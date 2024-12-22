@@ -3,17 +3,19 @@ package com.example.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
@@ -35,8 +37,12 @@ class FindActivity : AppCompatActivity() {
     private var searchText: String = SEARCH_TEXT_DEF
     private var trackList :ArrayList<Track> = arrayListOf()
     lateinit var adapter: TracksAdapter
+    private val searchRunnable = Runnable { sendSearchRequest() }
+    private val handler = Handler(Looper.getMainLooper())
+    private var isClickAllowed = true
 
     private lateinit var etSearch: EditText
+    private lateinit var pbSearch: ProgressBar
     private lateinit var btnUpdate: Button
     private lateinit var placeholderMessage: TextView
     private lateinit var imageNothing: ImageView
@@ -73,6 +79,7 @@ class FindActivity : AppCompatActivity() {
         }
 
         etSearch = findViewById(R.id.etFind)
+        pbSearch = findViewById(R.id.pbSearch)
         val clearButton = findViewById<ImageView>(R.id.ivClear)
         btnUpdate = findViewById(R.id.btnUpdateSearch)
         placeholderMessage = findViewById(R.id.tvPlaceholder)
@@ -105,6 +112,7 @@ class FindActivity : AppCompatActivity() {
                 clearButton.visibility = clearButtonVisibility(s)
                 searchText = s.toString()
                 etSearch.setSelection(searchText.length)
+                searchDebounce()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -125,15 +133,17 @@ class FindActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         adapter = TracksAdapter(trackList) {
-            searchHistory.addToHistory(track = it)
-            if (tvSearchHistory.isVisible) {
-                trackList.clear()
-                trackList.addAll(searchHistory.load())
-                adapter.notifyDataSetChanged()
+            if (clickDebounce()) {
+                searchHistory.addToHistory(track = it)
+                if (tvSearchHistory.isVisible) {
+                    trackList.clear()
+                    trackList.addAll(searchHistory.load())
+                    adapter.notifyDataSetChanged()
+                }
+                val displayIntent = Intent(this@FindActivity, PlayerActivity::class.java)
+                displayIntent.putExtra("track", it)
+                startActivity(displayIntent)
             }
-            val displayIntent = Intent(this@FindActivity, PlayerActivity::class.java)
-            displayIntent.putExtra("track", it)
-            startActivity(displayIntent)
         }
         recyclerView.adapter = adapter
         showSearchHistory(true)
@@ -207,11 +217,13 @@ class FindActivity : AppCompatActivity() {
     }
     private fun sendSearchRequest() {
         if (etSearch.text.isNotEmpty()) {
+            pbSearch.visibility = View.VISIBLE
             itunesService.search(etSearch.text.toString()).enqueue(object :
                 Callback<TracksResponse> {
                 override fun onResponse(call: Call<TracksResponse>,
                                         response: Response<TracksResponse>
                 ) {
+                    pbSearch.visibility = View.GONE
                     if (response.code() == REQUEST_OK) {
                         trackList.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
@@ -237,10 +249,27 @@ class FindActivity : AppCompatActivity() {
 
     }
 
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
     companion object {
         const val REQUEST_OK = 200
         const val SEARCH_TEXT = "SEARCH_TEXT"
         const val SEARCH_TEXT_DEF = ""
+
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }
 
