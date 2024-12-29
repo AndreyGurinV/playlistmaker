@@ -1,16 +1,22 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.data
 
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 
-class SearchHistory(val sp: SharedPreferences) {
+const val PLAY_LIST_PREFERENCES = "play_list_preferences"
+
+class SearchHistory(val context: Context) {
+    private val sp: SharedPreferences = context.getSharedPreferences(PLAY_LIST_PREFERENCES, MODE_PRIVATE)
     val USER_KEY = "PlayListMakerHistory"
     fun load(): Array<Track> {
         val json = sp.getString(USER_KEY, null) ?: return emptyArray()
         return Gson().fromJson(json, Array<Track>::class.java)
     }
 
-    fun write(tracks: Array<Track>) {
+    private fun write(tracks: Array<Track>) {
         val json = Gson().toJson(tracks)
         sp.edit()
             .putString(USER_KEY, json)
