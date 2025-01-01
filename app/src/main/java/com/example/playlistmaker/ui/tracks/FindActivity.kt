@@ -29,7 +29,6 @@ import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.impl.SearchHistoryIteractorImpl
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentation.TracksAdapter
 import com.example.playlistmaker.ui.player.PlayerActivity
 
 

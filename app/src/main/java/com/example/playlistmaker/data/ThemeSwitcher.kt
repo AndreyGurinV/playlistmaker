@@ -1,15 +1,11 @@
 package com.example.playlistmaker.data
 
-import android.content.Context
 import android.content.SharedPreferences
 
-class ThemeSwitcher(val context: Context) {
-    private val sp: SharedPreferences = context.getSharedPreferences(PLAY_LIST_PREFERENCES,
-        Context.MODE_PRIVATE
-    )
+class ThemeSwitcher(private val sp: SharedPreferences) {
 
-    fun getCurrentTheme(): Boolean {
-        return sp.getBoolean(USER_KEY, false)
+    fun getCurrentTheme(defVal: Boolean): Boolean {
+        return sp.getBoolean(USER_KEY, defVal)
     }
 
     fun saveCurrentTheme(isDark: Boolean){

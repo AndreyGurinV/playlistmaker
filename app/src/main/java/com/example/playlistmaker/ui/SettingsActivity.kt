@@ -7,10 +7,12 @@ import android.widget.TextView
 import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.App
 import com.example.playlistmaker.Creator
+import com.example.playlistmaker.CurrentTheme
 import com.example.playlistmaker.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 
@@ -26,7 +28,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         with(findViewById<SwitchMaterial>(R.id.themeSwitcher)){
-            this.isChecked = Creator.provideThemeInteractor(context).getCurrentTheme()
+            this.isChecked = Creator.provideThemeInteractor(context)
+                .getCurrentTheme(CurrentTheme.isDarkTheme(context))
             this.setOnCheckedChangeListener { switcher, checked ->
                 (applicationContext as App).switchTheme(checked)
             }

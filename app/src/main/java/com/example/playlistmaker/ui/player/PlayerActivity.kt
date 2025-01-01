@@ -1,6 +1,5 @@
 package com.example.playlistmaker.ui.player
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,6 +13,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
 
@@ -30,8 +30,7 @@ class PlayerActivity() : AppCompatActivity() {
     private lateinit var btnPlay: ImageButton
     private lateinit var tvCurrentTime: TextView
 
-    private var mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
+    private val mediaPlayer = Creator.providePlayerIteractor()
     private val handler = Handler(Looper.getMainLooper())
     private val playRunnable = createUpdateTimerTask()
 
@@ -69,7 +68,7 @@ class PlayerActivity() : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        mediaPlayer.pausePlayer()
     }
 
     override fun onDestroy() {
@@ -82,7 +81,7 @@ class PlayerActivity() : AppCompatActivity() {
             .load(track.getCoverArtwork())
             .placeholder(R.drawable.default_album_icon)
             .fitCenter()
-            .transform(RoundedCorners(2))
+            .transform(RoundedCorners(8))
             .into(imageAlbumCover)
         tvTrackName.text = track.trackName
         tvArtistName.text = track.artistName
@@ -96,43 +95,27 @@ class PlayerActivity() : AppCompatActivity() {
     }
 
     private fun preparePlayer(url: String) {
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            btnPlay.isEnabled = true
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-//            btnPlay.text = "PLAY"
-            btnPlay.setImageResource(R.drawable.dark_mode_play_icon)
-            playerState = STATE_PREPARED
-        }
-    }
-
-    private fun startPlayer() {
-        mediaPlayer.start()
-        btnPlay.setImageResource(R.drawable.dark_mode_pause_icon)
-        playerState = STATE_PLAYING
-        handler.postDelayed(playRunnable, DELAY)
-    }
-
-    private fun pausePlayer() {
-        mediaPlayer.pause()
-        btnPlay.setImageResource(R.drawable.dark_mode_play_icon)
-        playerState = STATE_PAUSED
-        handler.removeCallbacks(playRunnable)
-        tvCurrentTime.text = String.format("%d:%02d", currentTimeSecs / 60, currentTimeSecs % 60)
+        mediaPlayer.preparePlayer(
+            url,
+            onPreparedListener = {
+                btnPlay.isEnabled = true
+            },
+            onCompletionListener = {
+                btnPlay.setImageResource(R.drawable.dark_mode_play_icon)
+            },
+            onPlayerStarted = {
+                btnPlay.setImageResource(R.drawable.dark_mode_pause_icon)
+                handler.postDelayed(playRunnable, DELAY)
+            },
+            onPlayerPaused = {
+                btnPlay.setImageResource(R.drawable.dark_mode_play_icon)
+                handler.removeCallbacks(playRunnable)
+                tvCurrentTime.text = String.format("%d:%02d", currentTimeSecs / 60, currentTimeSecs % 60)
+            })
     }
 
     private fun playbackControl() {
-        when(playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-            }
-        }
+        mediaPlayer.playbackControl()
     }
 
     private fun createUpdateTimerTask(): Runnable {
@@ -144,17 +127,14 @@ class PlayerActivity() : AppCompatActivity() {
                     handler.postDelayed(this, DELAY)
                 } else {
                     currentTimeSecs = 0
-                    pausePlayer()
+                    mediaPlayer.pausePlayer()
                 }
             }
         }
     }
-    companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
 
+    companion object {
         private const val DELAY = 1000L
     }
+
 }
