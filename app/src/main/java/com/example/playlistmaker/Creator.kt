@@ -2,7 +2,7 @@ package com.example.playlistmaker
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
-import com.example.playlistmaker.data.Player
+import android.media.MediaPlayer
 import com.example.playlistmaker.data.PlayerRepositoryImpl
 import com.example.playlistmaker.data.SearchHistory
 import com.example.playlistmaker.data.SearchHistoryRepositoryImpl
@@ -46,7 +46,7 @@ object Creator {
         SearchHistoryIteractorImpl(getSearchHistoryRepository(context))
 
     private fun getPlayer() =
-        Player()
+        MediaPlayer()
 
     private fun getPlayerRepositiry(): PlayerRepositoryImpl =
         PlayerRepositoryImpl(getPlayer())
