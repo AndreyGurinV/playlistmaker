@@ -6,8 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    tools:context=".SettingsActivity"
-    android:orientation="vertical">
+    tools:context=".ui.SettingsActivity"
+    android:orientation="vertical"
+    style="@style/BackgroundStyle">
 
     <Toolbar
         android:id="@+id/back"
@@ -18,7 +19,7 @@
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/themeSwitcher"
-        style="@style/SettingsActivityIcons"
+        style="@style/SwitchMaterialStyle"
         android:text="@string/dark_theme"/>
 
     <TextView

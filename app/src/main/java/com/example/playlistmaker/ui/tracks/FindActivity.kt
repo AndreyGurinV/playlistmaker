@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.tracks
 
 import android.content.Context
 import android.content.Intent
@@ -25,13 +25,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.impl.SearchHistoryIteractorImpl
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.player.PlayerActivity
 
-const val PLAY_LIST_PREFERENCES = "play_list_preferences"
 
 class FindActivity : AppCompatActivity() {
     private var searchText: String = SEARCH_TEXT_DEF
@@ -50,17 +49,9 @@ class FindActivity : AppCompatActivity() {
 
     private lateinit var btnClearHistory: Button
     private lateinit var tvSearchHistory: TextView
-    private lateinit var searchHistory: SearchHistory
+    private lateinit var searchHistory: SearchHistoryIteractorImpl
     private lateinit var recyclerView: RecyclerView
 
-    private val itunesBaseUrl = "https://itunes.apple.com/"
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(itunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val itunesService = retrofit.create(ItunesAPI::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +63,7 @@ class FindActivity : AppCompatActivity() {
             insets
         }
 
-        searchHistory = SearchHistory(getSharedPreferences(PLAY_LIST_PREFERENCES, MODE_PRIVATE))
+        searchHistory = Creator.provideSearchHistoryInteractor(context = this)
 
         findViewById<Toolbar>(R.id.tbBackFromFind).setNavigationOnClickListener {
             finish()
@@ -218,33 +209,23 @@ class FindActivity : AppCompatActivity() {
     private fun sendSearchRequest() {
         if (etSearch.text.isNotEmpty()) {
             pbSearch.visibility = View.VISIBLE
-            itunesService.search(etSearch.text.toString()).enqueue(object :
-                Callback<TracksResponse> {
-                override fun onResponse(call: Call<TracksResponse>,
-                                        response: Response<TracksResponse>
-                ) {
-                    pbSearch.visibility = View.GONE
-                    if (response.code() == REQUEST_OK) {
-                        trackList.clear()
-                        if (response.body()?.results?.isNotEmpty() == true) {
-                            trackList.addAll(response.body()?.results!!)
-                            adapter.notifyDataSetChanged()
-                        }
-                        if (trackList.isEmpty()) {
-                            showMessage(getString(R.string.nothing_found), false)
-                        } else {
-                            showMessage("", false)
-                        }
-                    } else {
-                        showMessage(getString(R.string.something_went_wrong), true)
-                    }
-                }
-
-                override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+            Creator.provideTracksInteractor(onError = {
+                handler.post {
                     showMessage(getString(R.string.something_went_wrong), true)
                 }
-
-            })
+            }, onSuccess = {
+                handler.post {
+                    pbSearch.visibility = View.GONE
+                    trackList.clear()
+                    trackList.addAll(it)
+                    adapter.notifyDataSetChanged()
+                    if (it.isEmpty()) {
+                        showMessage(getString(R.string.nothing_found), false)
+                    } else {
+                        showMessage("", false)
+                    }
+                }
+            }).searchTracks(etSearch.text.toString())
         }
 
     }
@@ -264,7 +245,6 @@ class FindActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val REQUEST_OK = 200
         const val SEARCH_TEXT = "SEARCH_TEXT"
         const val SEARCH_TEXT_DEF = ""
 

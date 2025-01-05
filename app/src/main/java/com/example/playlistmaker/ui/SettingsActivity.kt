@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui
 
 import android.content.Intent
 import android.net.Uri
@@ -7,8 +7,13 @@ import android.widget.TextView
 import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.playlistmaker.App
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.CurrentTheme
+import com.example.playlistmaker.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
@@ -23,7 +28,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         with(findViewById<SwitchMaterial>(R.id.themeSwitcher)){
-            this.isChecked = (applicationContext as App).darkTheme
+            this.isChecked = Creator.provideThemeInteractor(context)
+                .getCurrentTheme(CurrentTheme.isDarkTheme(context))
             this.setOnCheckedChangeListener { switcher, checked ->
                 (applicationContext as App).switchTheme(checked)
             }

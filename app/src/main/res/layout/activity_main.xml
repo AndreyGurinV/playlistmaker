@@ -6,14 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="?attr/colorPrimaryVariant"
-    tools:context=".MainActivity"
-    android:padding="20dp">
+    tools:context=".ui.MainActivity"
+    android:padding="20dp"
+    style="@style/BackgroundMainActivityStyle">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimaryVariant"
         >
 
         <TextView
@@ -23,7 +22,6 @@
             android:layout_gravity="start"
             android:text="@string/app_name"
             android:textColor="@color/white"
-            android:background="?attr/colorPrimaryVariant"
             android:textSize="@dimen/title_font_size_22"/>
 
     </FrameLayout>
@@ -32,7 +30,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="33dp"
-        android:background="?attr/colorPrimaryVariant"
         android:orientation="vertical">
 
         <Button
