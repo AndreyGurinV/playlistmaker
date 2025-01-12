@@ -13,9 +13,8 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.R
 import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.search.domain.TracksInteractor
 import com.example.playlistmaker.search.data.TracksState
-import com.example.playlistmaker.search.domain.impl.SearchHistoryIteractorImpl
+import com.example.playlistmaker.search.domain.TracksInteractor
 
 class TracksSearchViewModel(application: Application): AndroidViewModel(application)  {
     companion object {
