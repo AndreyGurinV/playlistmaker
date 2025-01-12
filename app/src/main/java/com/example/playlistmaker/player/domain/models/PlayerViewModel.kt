@@ -33,9 +33,6 @@ class PlayerViewModel(application: Application): AndroidViewModel(application)  
             }
         )
     }
-    fun startPlayer() {
-        playerIteractor.startPlayer()
-    }
 
     fun pausePlayer() {
         playerIteractor.pausePlayer()

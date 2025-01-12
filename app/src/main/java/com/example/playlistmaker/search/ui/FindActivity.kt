@@ -27,8 +27,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.search.domain.impl.SearchHistoryIteractorImpl
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.data.TracksState
 import com.example.playlistmaker.search.domain.models.Track
@@ -53,7 +51,6 @@ class FindActivity : AppCompatActivity() {
 
     private lateinit var btnClearHistory: Button
     private lateinit var tvSearchHistory: TextView
-//    private lateinit var searchHistory: SearchHistoryIteractorImpl
     private lateinit var recyclerView: RecyclerView
 
 
@@ -68,8 +65,6 @@ class FindActivity : AppCompatActivity() {
         }
 
         viewModel = ViewModelProvider(this, TracksSearchViewModel.getViewModelFactory())[TracksSearchViewModel::class.java]
-
-//        searchHistory = Creator.provideSearchHistoryInteractor(context = this)
 
         findViewById<Toolbar>(R.id.tbBackFromFind).setNavigationOnClickListener {
             finish()

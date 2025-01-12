@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.App
 import com.example.playlistmaker.CurrentTheme
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.settings.domain.model.SettingsViewModel
 import com.google.android.material.switchmaterial.SwitchMaterial
 
@@ -44,26 +43,14 @@ class SettingsActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.share).setOnClickListener {
             viewModel.shareApp()
-//            val shareIntent = Intent(Intent.ACTION_SEND)
-//            shareIntent.type = "text/plain"
-//            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.link_for_practicum))
-//            startActivity(shareIntent)
         }
 
         findViewById<TextView>(R.id.support).setOnClickListener {
             viewModel.openSupport()
-//            val sendToIntent = Intent(Intent.ACTION_SENDTO)
-//            sendToIntent.data = Uri.parse("mailto:")
-//            sendToIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(R.string.my_email))
-//            sendToIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_for_developers))
-//            sendToIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.message_for_developers))
-//            startActivity(sendToIntent)
         }
 
         findViewById<TextView>(R.id.agreement).setOnClickListener {
             viewModel.openTerms()
-//            val agreementIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_for_agreement)))
-//            startActivity(agreementIntent)
         }
     }
 }
