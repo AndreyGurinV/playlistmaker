@@ -46,15 +46,15 @@ class PlayerViewModel(application: Application): AndroidViewModel(application)  
         playerIteractor.release()
     }
 
+    private fun renderState(state: PlayerState) {
+        stateLiveData.postValue(state)
+    }
+
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 PlayerViewModel(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
             }
         }
-    }
-
-    private fun renderState(state: PlayerState) {
-        stateLiveData.postValue(state)
     }
 }

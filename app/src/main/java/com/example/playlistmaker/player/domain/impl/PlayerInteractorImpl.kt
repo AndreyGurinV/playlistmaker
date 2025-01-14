@@ -1,9 +1,9 @@
 package com.example.playlistmaker.player.domain.impl
 
-import com.example.playlistmaker.player.domain.PlayerIteractor
+import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.player.data.PlayerRepository
 
-class PlayerIteractorImpl(private val playerRepository: PlayerRepository): PlayerIteractor {
+class PlayerInteractorImpl(private val playerRepository: PlayerRepository): PlayerInteractor {
 
     private var playerState = STATE_DEFAULT
     lateinit var onPlayerStarted_:  () -> Unit

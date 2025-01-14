@@ -1,6 +1,6 @@
 package com.example.playlistmaker.settings.domain
 
-interface ThemeIteractor {
+interface ThemeInteractor {
     fun getCurrentTheme(defVal: Boolean): Boolean
 
     fun saveCurrentTheme(isDark: Boolean)

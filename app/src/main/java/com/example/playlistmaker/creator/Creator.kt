@@ -14,8 +14,8 @@ import com.example.playlistmaker.search.data.SearchHistoryRepository
 import com.example.playlistmaker.settings.data.ThemeRepository
 import com.example.playlistmaker.search.domain.TracksInteractor
 import com.example.playlistmaker.search.data.TracksRepository
-import com.example.playlistmaker.player.domain.impl.PlayerIteractorImpl
-import com.example.playlistmaker.search.domain.impl.SearchHistoryIteractorImpl
+import com.example.playlistmaker.player.domain.impl.PlayerInteractorImpl
+import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.settings.domain.impl.ThemeInteractorImpl
 import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.sharing.data.ExternalNavigator
@@ -49,8 +49,8 @@ object Creator {
     private fun getSearchHistoryRepository(context: Context): SearchHistoryRepository =
         SearchHistoryRepositoryImpl(getSearchHistory(context))
 
-    fun provideSearchHistoryInteractor(context: Context): SearchHistoryIteractorImpl =
-        SearchHistoryIteractorImpl(getSearchHistoryRepository(context))
+    fun provideSearchHistoryInteractor(context: Context): SearchHistoryInteractorImpl =
+        SearchHistoryInteractorImpl(getSearchHistoryRepository(context))
 
     private fun getPlayer() =
         MediaPlayer()
@@ -58,6 +58,6 @@ object Creator {
     private fun getPlayerRepositiry(): PlayerRepositoryImpl =
         PlayerRepositoryImpl(getPlayer())
 
-    fun providePlayerIteractor(): PlayerIteractorImpl =
-        PlayerIteractorImpl(getPlayerRepositiry())
+    fun providePlayerIteractor(): PlayerInteractorImpl =
+        PlayerInteractorImpl(getPlayerRepositiry())
 }

@@ -27,6 +27,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.ActivityFindBinding
+import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.data.TracksState
 import com.example.playlistmaker.search.domain.models.Track
@@ -41,23 +43,14 @@ class FindActivity : AppCompatActivity() {
     private var isClickAllowed = true
 
     private lateinit var viewModel: TracksSearchViewModel
-
-    private lateinit var etSearch: EditText
-    private lateinit var pbSearch: ProgressBar
-    private lateinit var btnUpdate: Button
-    private lateinit var placeholderMessage: TextView
-    private lateinit var imageNothing: ImageView
-    private lateinit var imageError: ImageView
-
-    private lateinit var btnClearHistory: Button
-    private lateinit var tvSearchHistory: TextView
-    private lateinit var recyclerView: RecyclerView
-
+    private lateinit var binding: ActivityFindBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_find)
+        binding = ActivityFindBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -70,26 +63,16 @@ class FindActivity : AppCompatActivity() {
             finish()
         }
 
-        etSearch = findViewById(R.id.etFind)
-        pbSearch = findViewById(R.id.pbSearch)
-        val clearButton = findViewById<ImageView>(R.id.ivClear)
-        btnUpdate = findViewById(R.id.btnUpdateSearch)
-        placeholderMessage = findViewById(R.id.tvPlaceholder)
-        imageNothing = findViewById(R.id.ivPlaceholderNothing)
-        imageError = findViewById(R.id.ivPlaceholderError)
-        btnClearHistory = findViewById(R.id.btnClearSearchHistory)
-        tvSearchHistory = findViewById(R.id.tvSearchHistory)
-
-        btnUpdate.setOnClickListener { sendSearchRequest() }
-        btnClearHistory.setOnClickListener {
+        binding.btnUpdateSearch.setOnClickListener { sendSearchRequest() }
+        binding.btnClearSearchHistory.setOnClickListener {
             trackList.clear()
             adapter.notifyDataSetChanged()
             viewModel.clear()
             showSearchHistory(false)
         }
 
-        clearButton.setOnClickListener {
-            etSearch.setText("")
+        binding.ivClear.setOnClickListener {
+            binding.etFind.setText("")
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(findViewById<LinearLayout>(R.id.main).windowToken, 0)
             showSearchHistory(true)
@@ -100,10 +83,10 @@ class FindActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                showSearchHistory (etSearch.hasFocus() && s?.isEmpty() == true)
-                clearButton.visibility = clearButtonVisibility(s)
+                showSearchHistory (binding.etFind.hasFocus() && s?.isEmpty() == true)
+                binding.ivClear.visibility = clearButtonVisibility(s)
                 searchText = s.toString()
-                etSearch.setSelection(searchText.length)
+                binding.etFind.setSelection(searchText.length)
                 viewModel.searchDebounce(searchText)
             }
 
@@ -115,24 +98,24 @@ class FindActivity : AppCompatActivity() {
             render(it)
         }
 
-        etSearch.addTextChangedListener(simpleTextWatcher)
-        etSearch.setOnEditorActionListener { _, actionId, _ ->
+        binding.etFind.addTextChangedListener(simpleTextWatcher)
+        binding.etFind.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 sendSearchRequest()
                 true
             }
             false
         }
-        etSearch.setOnFocusChangeListener { view, hasFocus ->
-            showSearchHistory (hasFocus && etSearch.text.isEmpty())
+        binding.etFind.setOnFocusChangeListener { view, hasFocus ->
+            showSearchHistory (hasFocus && binding.etFind.text.isEmpty())
         }
-        recyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+//        recyclerView = findViewById(R.id.recyclerView)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
         adapter = TracksAdapter(trackList) {
             if (clickDebounce()) {
                 viewModel.addToHistory(track = it)
-                if (tvSearchHistory.isVisible) {
+                if (binding.tvSearchHistory.isVisible) {
                     trackList.clear()
                     trackList.addAll(viewModel.load())
                     adapter.notifyDataSetChanged()
@@ -142,7 +125,7 @@ class FindActivity : AppCompatActivity() {
                 startActivity(displayIntent)
             }
         }
-        recyclerView.adapter = adapter
+        binding.recyclerView.adapter = adapter
         showSearchHistory(true)
     }
 
@@ -183,44 +166,44 @@ class FindActivity : AppCompatActivity() {
     }
 
     private fun showContent(tracks: List<Track>) {
-        pbSearch.visibility = View.GONE
+        binding.pbSearch.isVisible = false
         trackList.clear()
         trackList.addAll(tracks)
         adapter.notifyDataSetChanged()
-        placeholderMessage.isVisible = false
-        imageNothing.isVisible = false
-        imageError.isVisible = false
-        btnUpdate.isVisible = false
+        binding.tvPlaceholder.isVisible = false
+        binding.ivPlaceholderNothing.isVisible = false
+        binding.ivPlaceholderError.isVisible = false
+        binding.btnUpdateSearch.isVisible = false
     }
 
     private fun showEmpty(message: String) {
-        placeholderMessage.visibility = View.VISIBLE
-        pbSearch.visibility = View.GONE
+        binding.tvPlaceholder.isVisible = true
+        binding.pbSearch.isVisible = false
         trackList.clear()
         adapter.notifyDataSetChanged()
-        imageError.isVisible = false
-        imageNothing.isVisible = true
-        placeholderMessage.text = message
-        btnUpdate.isVisible = false
+        binding.ivPlaceholderError.isVisible = false
+        binding.ivPlaceholderNothing.isVisible = true
+        binding.tvPlaceholder.text = message
+        binding.btnUpdateSearch.isVisible = false
     }
 
     private fun showError(errorMessage: String) {
-        placeholderMessage.visibility = View.VISIBLE
-        pbSearch.visibility = View.GONE
+        binding.tvPlaceholder.isVisible = true
+        binding.pbSearch.isVisible = false
         trackList.clear()
         adapter.notifyDataSetChanged()
-        imageError.isVisible = true
-        imageNothing.isVisible = false
-        placeholderMessage.text = errorMessage
-        btnUpdate.isVisible = true
+        binding.ivPlaceholderError.isVisible = true
+        binding.ivPlaceholderNothing.isVisible = false
+        binding.tvPlaceholder.text = errorMessage
+        binding.btnUpdateSearch.isVisible = true
     }
 
     private fun showLoading() {
-        pbSearch.visibility = View.VISIBLE
-        placeholderMessage.isVisible = false
-        imageNothing.isVisible = false
-        imageError.isVisible = false
-        btnUpdate.isVisible = false
+        binding.pbSearch.isVisible = true
+        binding.tvPlaceholder.isVisible = false
+        binding.ivPlaceholderNothing.isVisible = false
+        binding.ivPlaceholderError.isVisible = false
+        binding.btnUpdateSearch.isVisible = false
     }
 
     private fun showSearchHistory(visible: Boolean) {
@@ -228,19 +211,19 @@ class FindActivity : AppCompatActivity() {
         if (visible) {
             with(viewModel.load()) {
                 trackList.addAll(this)
-                tvSearchHistory.isVisible = isNotEmpty()
-                btnClearHistory.isVisible = isNotEmpty()
+                binding.tvSearchHistory.isVisible = isNotEmpty()
+                binding.btnClearSearchHistory.isVisible = isNotEmpty()
             }
         } else {
-            tvSearchHistory.isVisible = false
-            btnClearHistory.isVisible = false
+            binding.tvSearchHistory.isVisible = false
+            binding.btnClearSearchHistory.isVisible = false
         }
         adapter.notifyDataSetChanged()
 
     }
     private fun sendSearchRequest() {
-        if (etSearch.text.isNotEmpty()) {
-            viewModel.searchDebounce(etSearch.text.toString())
+        if (binding.etFind.text.isNotEmpty()) {
+            viewModel.searchDebounce(binding.etFind.text.toString())
         }
     }
 

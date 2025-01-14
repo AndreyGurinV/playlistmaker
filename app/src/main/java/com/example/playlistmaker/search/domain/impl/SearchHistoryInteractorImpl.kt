@@ -1,11 +1,11 @@
 package com.example.playlistmaker.search.domain.impl
 
-import com.example.playlistmaker.search.domain.SearchHistoryIteractor
+import com.example.playlistmaker.search.domain.SearchHistoryInteractor
 import com.example.playlistmaker.search.data.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.models.Track
 
-class SearchHistoryIteractorImpl(private val searchHistoryRepository: SearchHistoryRepository):
-    SearchHistoryIteractor {
+class SearchHistoryInteractorImpl(private val searchHistoryRepository: SearchHistoryRepository):
+    SearchHistoryInteractor {
     override fun load(): Array<Track> {
         return searchHistoryRepository.load()
     }

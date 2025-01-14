@@ -1,6 +1,6 @@
 package com.example.playlistmaker.player.domain
 
-interface PlayerIteractor {
+interface PlayerInteractor {
 
     fun preparePlayer(
         url: String,

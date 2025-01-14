@@ -17,16 +17,6 @@ import com.example.playlistmaker.search.data.TracksState
 import com.example.playlistmaker.search.domain.TracksInteractor
 
 class TracksSearchViewModel(application: Application): AndroidViewModel(application)  {
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private val SEARCH_REQUEST_TOKEN = Any()
-
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                TracksSearchViewModel(this[APPLICATION_KEY] as Application)
-            }
-        }
-    }
 
     private val searchHistory = Creator.provideSearchHistoryInteractor(context = getApplication<Application>().applicationContext)
     private val tracksInteractor = Creator.provideTracksInteractor()
@@ -117,4 +107,14 @@ class TracksSearchViewModel(application: Application): AndroidViewModel(applicat
         searchHistory.clear()
     }
 
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private val SEARCH_REQUEST_TOKEN = Any()
+
+        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                TracksSearchViewModel(this[APPLICATION_KEY] as Application)
+            }
+        }
+    }
 }

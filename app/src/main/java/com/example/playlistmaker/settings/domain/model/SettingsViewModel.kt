@@ -8,13 +8,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.creator.Creator
 
 class SettingsViewModel(application: Application): AndroidViewModel(application) {
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SettingsViewModel(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
-            }
-        }
-    }
     private val sharingInteractor = Creator.provideSharingInteractor(getApplication<Application>().applicationContext)
     private val settingsInteractor = Creator.provideThemeInteractor(getApplication<Application>().applicationContext)
 
@@ -35,5 +28,13 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
 
     fun openSupport() {
         sharingInteractor.openSupport()
+    }
+
+    companion object {
+        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                SettingsViewModel(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
+            }
+        }
     }
 }
