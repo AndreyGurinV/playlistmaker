@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="top"
-    tools:context=".ui.tracks.FindActivity"
+    tools:context=".search.ui.FindActivity"
     android:orientation="vertical"
     style="@style/BackgroundStyle">
 

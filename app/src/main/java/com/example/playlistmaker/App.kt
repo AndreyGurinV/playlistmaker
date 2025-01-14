@@ -2,12 +2,14 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.creator.Creator
 
 class App :Application(){
 
     override fun onCreate() {
         super.onCreate()
-        switchTheme(Creator.provideThemeInteractor(this)
+        switchTheme(
+            Creator.provideThemeInteractor(this)
             .getCurrentTheme(CurrentTheme.isDarkTheme(this)))
     }
 
@@ -19,6 +21,5 @@ class App :Application(){
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-        Creator.provideThemeInteractor(this).saveCurrentTheme(darkThemeEnabled)
     }
 }
