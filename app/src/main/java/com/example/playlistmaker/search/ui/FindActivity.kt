@@ -11,28 +11,22 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityFindBinding
-import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.data.TracksState
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TracksSearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class FindActivity : AppCompatActivity() {
@@ -42,7 +36,7 @@ class FindActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
 
-    private lateinit var viewModel: TracksSearchViewModel
+    private val viewModel by viewModel<TracksSearchViewModel>()
     private lateinit var binding: ActivityFindBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,8 +50,6 @@ class FindActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        viewModel = ViewModelProvider(this, TracksSearchViewModel.getViewModelFactory())[TracksSearchViewModel::class.java]
 
         findViewById<Toolbar>(R.id.tbBackFromFind).setNavigationOnClickListener {
             finish()
@@ -109,7 +101,6 @@ class FindActivity : AppCompatActivity() {
         binding.etFind.setOnFocusChangeListener { view, hasFocus ->
             showSearchHistory (hasFocus && binding.etFind.text.isEmpty())
         }
-//        recyclerView = findViewById(R.id.recyclerView)
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
         adapter = TracksAdapter(trackList) {

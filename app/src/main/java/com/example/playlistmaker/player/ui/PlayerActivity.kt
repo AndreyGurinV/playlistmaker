@@ -3,15 +3,11 @@ package com.example.playlistmaker.player.ui
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -19,6 +15,7 @@ import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.data.PlayerState
 import com.example.playlistmaker.player.domain.models.PlayerViewModel
 import com.example.playlistmaker.search.domain.models.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity() : AppCompatActivity() {
 
@@ -27,7 +24,7 @@ class PlayerActivity() : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val playRunnable = createUpdateTimerTask()
 
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel by viewModel<PlayerViewModel>()
 
     var currentTimeSecs = 0
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,8 +38,6 @@ class PlayerActivity() : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        viewModel = ViewModelProvider(this, PlayerViewModel.getViewModelFactory())[PlayerViewModel::class.java]
 
         binding.btnPlay.setOnClickListener {
             viewModel.playbackControl()

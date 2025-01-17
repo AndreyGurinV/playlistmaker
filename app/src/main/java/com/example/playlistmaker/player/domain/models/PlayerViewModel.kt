@@ -1,18 +1,14 @@
 package com.example.playlistmaker.player.domain.models
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
+import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.player.data.PlayerState
+import com.example.playlistmaker.player.domain.PlayerInteractor
 
-class PlayerViewModel(application: Application): AndroidViewModel(application)  {
-
-    private val playerIteractor = Creator.providePlayerIteractor()
+class PlayerViewModel(
+    private val playerIteractor: PlayerInteractor
+): ViewModel()  {
     private val stateLiveData = MutableLiveData<PlayerState>()
     fun observeState(): LiveData<PlayerState> = stateLiveData
 
@@ -48,13 +44,5 @@ class PlayerViewModel(application: Application): AndroidViewModel(application)  
 
     private fun renderState(state: PlayerState) {
         stateLiveData.postValue(state)
-    }
-
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PlayerViewModel(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
-            }
-        }
     }
 }

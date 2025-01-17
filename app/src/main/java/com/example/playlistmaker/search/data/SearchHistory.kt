@@ -5,14 +5,17 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 
 
-class SearchHistory(private val sp: SharedPreferences) {
+class SearchHistory(
+    private val sp: SharedPreferences,
+    private val gson: Gson
+) {
     fun load(): Array<Track> {
         val json = sp.getString(USER_KEY, null) ?: return emptyArray()
-        return Gson().fromJson(json, Array<Track>::class.java)
+        return gson.fromJson(json, Array<Track>::class.java)
     }
 
     private fun write(tracks: Array<Track>) {
-        val json = Gson().toJson(tracks)
+        val json = gson.toJson(tracks)
         sp.edit()
             .putString(USER_KEY, json)
             .apply()
