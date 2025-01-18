@@ -1,25 +1,20 @@
 package com.example.playlistmaker.search.domain.models
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.search.data.TracksState
+import com.example.playlistmaker.search.domain.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.TracksInteractor
 
-class TracksSearchViewModel(application: Application): AndroidViewModel(application)  {
-
-    private val searchHistory = Creator.provideSearchHistoryInteractor(context = getApplication<Application>().applicationContext)
-    private val tracksInteractor = Creator.provideTracksInteractor()
+class TracksSearchViewModel(
+    private val searchHistory: SearchHistoryInteractor,
+    private val tracksInteractor: TracksInteractor
+): ViewModel()  {
     private val handler = Handler(Looper.getMainLooper())
 
     private val stateLiveData = MutableLiveData<TracksState>()
@@ -64,7 +59,7 @@ class TracksSearchViewModel(application: Application): AndroidViewModel(applicat
                         errorMessage != null -> {
                             renderState(
                                 TracksState.Error(
-                                    errorMessage = getApplication<Application>().getString(R.string.something_went_wrong),
+                                    errorMessageId = R.string.something_went_wrong,
                                 )
                             )
                         }
@@ -72,7 +67,7 @@ class TracksSearchViewModel(application: Application): AndroidViewModel(applicat
                         tracks.isEmpty() -> {
                             renderState(
                                 TracksState.Empty(
-                                    message = getApplication<Application>().getString(R.string.nothing_found),
+                                    messageTextId = R.string.nothing_found,
                                 )
                             )
                         }
@@ -110,11 +105,5 @@ class TracksSearchViewModel(application: Application): AndroidViewModel(applicat
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
-
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                TracksSearchViewModel(this[APPLICATION_KEY] as Application)
-            }
-        }
     }
 }

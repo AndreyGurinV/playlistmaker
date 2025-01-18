@@ -145,11 +145,14 @@
         <TextView
             android:id="@+id/tvAlbum"
             android:text="No reply"
-            android:maxLines="1"
             style="@style/PlayerTrackDescriptionTextStyle"
             android:textColor="?attr/colorPrimary"
+            android:layout_width="0dp"
+            android:maxLines="1"
             android:ellipsize="end"
+            android:textAlignment="textEnd"
             app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+            app:layout_constraintStart_toEndOf="@+id/tvAlbumText"
             app:layout_constraintTop_toBottomOf="@+id/tvProgress"
             />
 

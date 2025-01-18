@@ -23,6 +23,6 @@ class PlayerRepositoryImpl(private val player: MediaPlayer): PlayerRepository {
     }
 
     override fun release() {
-        player.release()
+        player.reset()
     }
 }
