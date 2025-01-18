@@ -57,8 +57,6 @@ class FindActivity : AppCompatActivity() {
 
         binding.btnUpdateSearch.setOnClickListener { sendSearchRequest() }
         binding.btnClearSearchHistory.setOnClickListener {
-            trackList.clear()
-            adapter.notifyDataSetChanged()
             viewModel.clear()
             showSearchHistory(false)
         }
@@ -150,8 +148,8 @@ class FindActivity : AppCompatActivity() {
     private fun render(state: TracksState) {
         when (state) {
             is TracksState.Content -> showContent(state.tracks)
-            is TracksState.Empty -> showEmpty(state.message)
-            is TracksState.Error -> showError(state.errorMessage)
+            is TracksState.Empty -> showEmpty(getString(state.messageTextId))
+            is TracksState.Error -> showError(getString(state.errorMessageId))
             is TracksState.Loading -> showLoading()
         }
     }
@@ -161,10 +159,7 @@ class FindActivity : AppCompatActivity() {
         trackList.clear()
         trackList.addAll(tracks)
         adapter.notifyDataSetChanged()
-        binding.tvPlaceholder.isVisible = false
-        binding.ivPlaceholderNothing.isVisible = false
-        binding.ivPlaceholderError.isVisible = false
-        binding.btnUpdateSearch.isVisible = false
+        hideAllPlaceholders()
     }
 
     private fun showEmpty(message: String) {
@@ -191,14 +186,12 @@ class FindActivity : AppCompatActivity() {
 
     private fun showLoading() {
         binding.pbSearch.isVisible = true
-        binding.tvPlaceholder.isVisible = false
-        binding.ivPlaceholderNothing.isVisible = false
-        binding.ivPlaceholderError.isVisible = false
-        binding.btnUpdateSearch.isVisible = false
+        hideAllPlaceholders()
     }
 
     private fun showSearchHistory(visible: Boolean) {
         trackList.clear()
+        hideAllPlaceholders()
         if (visible) {
             with(viewModel.load()) {
                 trackList.addAll(this)
@@ -210,8 +203,15 @@ class FindActivity : AppCompatActivity() {
             binding.btnClearSearchHistory.isVisible = false
         }
         adapter.notifyDataSetChanged()
-
     }
+
+    private fun hideAllPlaceholders() {
+        binding.tvPlaceholder.isVisible = false
+        binding.ivPlaceholderNothing.isVisible = false
+        binding.ivPlaceholderError.isVisible = false
+        binding.btnUpdateSearch.isVisible = false
+    }
+
     private fun sendSearchRequest() {
         if (binding.etFind.text.isNotEmpty()) {
             viewModel.searchDebounce(binding.etFind.text.toString())

@@ -1,6 +1,5 @@
 package com.example.playlistmaker.search.domain.models
 
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
@@ -13,7 +12,6 @@ import com.example.playlistmaker.search.domain.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.TracksInteractor
 
 class TracksSearchViewModel(
-    private val context: Context,
     private val searchHistory: SearchHistoryInteractor,
     private val tracksInteractor: TracksInteractor
 ): ViewModel()  {
@@ -61,7 +59,7 @@ class TracksSearchViewModel(
                         errorMessage != null -> {
                             renderState(
                                 TracksState.Error(
-                                    errorMessage = context.getString(R.string.something_went_wrong),
+                                    errorMessageId = R.string.something_went_wrong,
                                 )
                             )
                         }
@@ -69,7 +67,7 @@ class TracksSearchViewModel(
                         tracks.isEmpty() -> {
                             renderState(
                                 TracksState.Empty(
-                                    message = context.getString(R.string.nothing_found),
+                                    messageTextId = R.string.nothing_found,
                                 )
                             )
                         }

@@ -2,17 +2,11 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.player.di.playerDataModule
-import com.example.playlistmaker.player.di.playerInteractorModule
-import com.example.playlistmaker.player.di.playerViewModelModule
-import com.example.playlistmaker.search.di.dataModule
-import com.example.playlistmaker.search.di.interactorModule
-import com.example.playlistmaker.search.di.repositoryModule
-import com.example.playlistmaker.search.di.viewModelModule
+import com.example.playlistmaker.player.di.playerModule
+import com.example.playlistmaker.search.di.searchHistoryModule
+import com.example.playlistmaker.search.di.searchModule
+import com.example.playlistmaker.settings.di.settingsModule
 import com.example.playlistmaker.settings.domain.ThemeInteractor
-import com.example.playlistmaker.settings.domain.di.settingsDataModule
-import com.example.playlistmaker.settings.domain.di.settingsInteractorModule
-import com.example.playlistmaker.settings.domain.di.settingsViewModelModule
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -24,10 +18,7 @@ class App :Application(){
         super.onCreate()
         startKoin{
             androidContext(this@App)
-            modules(settingsDataModule, settingsInteractorModule, settingsViewModelModule,
-                playerDataModule, playerInteractorModule, playerViewModelModule,
-                dataModule, repositoryModule, interactorModule, viewModelModule
-            )
+            modules(settingsModule, playerModule, searchHistoryModule, searchModule)
         }
         switchTheme(
             themeInteractor
