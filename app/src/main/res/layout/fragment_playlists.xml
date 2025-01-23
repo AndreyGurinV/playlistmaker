@@ -1,0 +1,38 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btnUpdateSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/size_6"
+        app:iconTint="@color/button_text"
+        android:text="@string/new_playlist"
+        />
+
+    <ImageView
+        android:id="@+id/ivPlaceholderNothing"
+        style="@style/PlaceholderNothingIconStyle"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/size_46"
+        android:background="@android:color/transparent"
+        android:padding="@dimen/margins"
+        />
+
+    <TextView
+        android:id="@+id/tvPlaceholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:paddingTop="@dimen/margins"
+        android:text="@string/empty_playlists"
+        android:textColor="?attr/colorPrimary"
+        style="@style/PlaceholderEmptyPlaylistTextStyle"
+        android:paddingBottom="@dimen/margins_24"
+        />
+</LinearLayout>

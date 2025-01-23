@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.data
 
+import androidx.annotation.StringRes
 import com.example.playlistmaker.search.domain.models.Track
 
 sealed interface TracksState {
@@ -10,10 +11,10 @@ sealed interface TracksState {
     ) : TracksState
 
     data class Error(
-        val errorMessageId: Int
+        @StringRes val errorMessageId: Int
     ): TracksState
 
     data class Empty(
-        val messageTextId: Int
+        @StringRes val messageTextId: Int
     ): TracksState
 }
