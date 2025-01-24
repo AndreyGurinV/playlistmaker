@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="margin_album_4">4dp</dimen>
+    <dimen name="size_6">6dp</dimen>
     <dimen name="icon_padding">8dp</dimen>
     <dimen name="size_9">9dp</dimen>
     <dimen name="find_images_padding_12">12dp</dimen>
@@ -12,6 +13,7 @@
     <dimen name="image_width">24dp</dimen>
     <dimen name="image_height">24dp</dimen>
     <dimen name="size_26">26dp</dimen>
+    <dimen name="size_46">46dp</dimen>
     <dimen name="size_30">30dp</dimen>
     <dimen name="size_140">140dp</dimen>
     <dimen name="find_edit_text_h_padding">36dp</dimen>

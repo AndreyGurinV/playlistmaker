@@ -57,4 +57,5 @@ dependencies {
     annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")
     implementation ("androidx.core:core-ktx:1.9.0")
     implementation ("io.insert-koin:koin-android:3.3.0")
+    implementation ("androidx.fragment:fragment-ktx:1.5.5")
 }
