@@ -103,9 +103,7 @@ class FindFragment : Fragment() {
             if (clickDebounce()) {
                 viewModel.addToHistory(track = it)
                 if (binding.tvSearchHistory.isVisible) {
-                    trackList.clear()
-                    trackList.addAll(viewModel.load())
-                    adapter.notifyDataSetChanged()
+                    viewModel.load()
                 }
                 val displayIntent = Intent(requireContext(), PlayerActivity::class.java)
                 displayIntent.putExtra("track", it)
@@ -136,7 +134,22 @@ class FindFragment : Fragment() {
             is TracksState.Empty -> showEmpty(getString(state.messageTextId))
             is TracksState.Error -> showError(getString(state.errorMessageId))
             is TracksState.Loading -> showLoading()
+            is TracksState.History -> showHistory(state.tracks)
         }
+    }
+
+    private fun showHistory(tracks: List<Track>) {
+        if (searchText.isNotEmpty())
+            return
+        trackList.clear()
+        adapter.notifyDataSetChanged()
+        hideAllPlaceholders()
+        with(tracks) {
+            trackList.addAll(this)
+            binding.tvSearchHistory.isVisible = isNotEmpty()
+            binding.btnClearSearchHistory.isVisible = isNotEmpty()
+        }
+        adapter.notifyDataSetChanged()
     }
 
     private fun showContent(tracks: List<Track>) {
@@ -181,12 +194,7 @@ class FindFragment : Fragment() {
         adapter.notifyDataSetChanged()
         hideAllPlaceholders()
         if (visible) {
-            with(viewModel.load()) {
-                trackList.addAll(this)
-                binding.tvSearchHistory.isVisible = isNotEmpty()
-                binding.btnClearSearchHistory.isVisible = isNotEmpty()
-                adapter.notifyDataSetChanged()
-            }
+            viewModel.load()
         } else {
             binding.tvSearchHistory.isVisible = false
             binding.btnClearSearchHistory.isVisible = false

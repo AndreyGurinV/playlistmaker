@@ -90,8 +90,12 @@ class TracksSearchViewModel(
         stateLiveData.postValue(state)
     }
 
-    fun load(): Array<Track> {
-        return searchHistory.load()
+    fun load() {
+        renderState(
+            TracksState.History(
+                tracks = searchHistory.load().asList()
+            )
+        )
     }
 
     fun addToHistory(track: Track) {
