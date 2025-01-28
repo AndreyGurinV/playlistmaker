@@ -27,7 +27,7 @@
 
         <Toolbar
             android:id="@+id/tbBackFromPlayer"
-            style="@style/ToolBarStyle"
+            style="@style/ToolBarStyleWithBack"
             android:title=""
             >
         </Toolbar>
