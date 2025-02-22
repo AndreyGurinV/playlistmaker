@@ -56,6 +56,12 @@ class PlayerInteractorImpl(private val playerRepository: PlayerRepository): Play
         playerRepository.release()
     }
 
+    override fun isPlaying(): Boolean =
+        playerRepository.isPlaying()
+
+    override fun currentPosition(): Int =
+        playerRepository.currentPosition()
+
     companion object {
         private const val STATE_DEFAULT = 0
         private const val STATE_PREPARED = 1
