@@ -1,8 +1,6 @@
 package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +10,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
-import com.example.playlistmaker.player.data.PlayerState
 import com.example.playlistmaker.player.domain.models.PlayerViewModel
 import com.example.playlistmaker.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -21,12 +18,8 @@ class PlayerActivity() : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
 
-    private val handler = Handler(Looper.getMainLooper())
-    private val playRunnable = createUpdateTimerTask()
-
     private val viewModel by viewModel<PlayerViewModel>()
 
-    var currentTimeSecs = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -47,7 +40,12 @@ class PlayerActivity() : AppCompatActivity() {
             finish()
         }
         viewModel.observeState().observe(this) {
-            render(it)
+            binding.btnPlay.isEnabled = it.isPlayButtonEnabled
+            if (it.isButtonPaused)
+                binding.btnPlay.setImageResource(R.drawable.dark_mode_pause_icon)
+            else
+                binding.btnPlay.setImageResource(R.drawable.dark_mode_play_icon)
+            binding.tvCurrentTime.text = it.progress
         }
 
         setCurrentTrack(track = intent.extras?.getSerializable("track") as Track)
@@ -83,45 +81,5 @@ class PlayerActivity() : AppCompatActivity() {
 
     private fun preparePlayer(url: String) {
         viewModel.preparePlayer(url)
-    }
-
-    private fun render(state: PlayerState) {
-        when (state) {
-            is PlayerState.Prepared -> {
-                binding.btnPlay.isEnabled = true
-            }
-            is PlayerState.Completion -> {
-                binding.btnPlay.setImageResource(R.drawable.dark_mode_play_icon)
-            }
-            is PlayerState.Paused -> {
-                binding.btnPlay.setImageResource(R.drawable.dark_mode_play_icon)
-                handler.removeCallbacks(playRunnable)
-                binding.tvCurrentTime.text = String.format("%d:%02d", currentTimeSecs / 60, currentTimeSecs % 60)
-            }
-            is PlayerState.Started -> {
-                binding.btnPlay.setImageResource(R.drawable.dark_mode_pause_icon)
-                handler.postDelayed(playRunnable, DELAY)
-            }
-        }
-    }
-
-
-    private fun createUpdateTimerTask(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                currentTimeSecs++
-                if (currentTimeSecs < 30) {
-                    binding.tvCurrentTime.text = String.format("%d:%02d", currentTimeSecs / 60, currentTimeSecs % 60)
-                    handler.postDelayed(this, DELAY)
-                } else {
-                    currentTimeSecs = 0
-                    viewModel.pausePlayer()
-                }
-            }
-        }
-    }
-
-    companion object {
-        private const val DELAY = 1000L
     }
 }

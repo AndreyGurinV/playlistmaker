@@ -4,31 +4,35 @@ import com.example.playlistmaker.search.data.dto.TracksResponse
 import com.example.playlistmaker.search.data.dto.TracksSearchRequest
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.util.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
-    override fun searchTracks(expression: String): Resource<List<Track>> {
+    override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow{
         val response = networkClient.doRequest(TracksSearchRequest(expression))
-        return when (response.resultCode) {
-            NO_INTERNET -> Resource.Error("Check connection to internet")
+        when (response.resultCode) {
+            NO_INTERNET -> emit(Resource.Error("Check connection to internet"))
             REQUEST_OK -> {
-                Resource.Success(
-                    (response as TracksResponse).results.map {
-                        Track(
-                            trackId = it.trackId,
-                            trackName = it.trackName,
-                            artistName = it.artistName,
-                            trackTimeMillis = it.trackTimeMillis,
-                            artworkUrl100 = it.artworkUrl100,
-                            collectionName = it.collectionName,
-                            releaseDate = it.releaseDate,
-                            primaryGenreName = it.primaryGenreName,
-                            country = it.country,
-                            previewUrl = it.previewUrl
-                        )
-                    }
+                emit(
+                    Resource.Success(
+                        (response as TracksResponse).results.map {
+                            Track(
+                                trackId = it.trackId,
+                                trackName = it.trackName,
+                                artistName = it.artistName,
+                                trackTimeMillis = it.trackTimeMillis,
+                                artworkUrl100 = it.artworkUrl100,
+                                collectionName = it.collectionName,
+                                releaseDate = it.releaseDate,
+                                primaryGenreName = it.primaryGenreName,
+                                country = it.country,
+                                previewUrl = it.previewUrl
+                            )
+                        }
+                    )
                 )
             }
-            else -> Resource.Error("Server Error")
+            else -> emit(Resource.Error("Server Error"))
         }
     }
 

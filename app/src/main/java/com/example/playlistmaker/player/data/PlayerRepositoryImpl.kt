@@ -25,4 +25,11 @@ class PlayerRepositoryImpl(private val player: MediaPlayer): PlayerRepository {
     override fun release() {
         player.reset()
     }
+
+    override fun isPlaying(): Boolean =
+        player.isPlaying
+
+    override fun currentPosition(): Int =
+        player.currentPosition
+
 }

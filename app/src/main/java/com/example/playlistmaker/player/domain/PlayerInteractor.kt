@@ -17,4 +17,9 @@ interface PlayerInteractor {
     fun playbackControl()
 
     fun release()
+
+    fun isPlaying(): Boolean
+
+    fun currentPosition(): Int
+
 }
