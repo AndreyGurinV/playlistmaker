@@ -1,9 +1,10 @@
 package com.example.playlistmaker.search.data
 
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
 
 interface SearchHistoryRepository {
-    fun load(): Array<Track>
+    suspend fun load(): Flow<Array<Track>>
 
     fun addToHistory(track: Track)
 

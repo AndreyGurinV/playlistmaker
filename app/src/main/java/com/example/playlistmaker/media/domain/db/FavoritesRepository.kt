@@ -1,0 +1,12 @@
+package com.example.playlistmaker.media.domain.db
+
+import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
+
+interface FavoritesRepository {
+    suspend fun addTrack(track: Track)
+
+    suspend fun removeTrack(track: Track)
+
+    suspend fun getTracks(): Flow<List<Track>>
+}

@@ -20,6 +20,7 @@ class PlayerActivity() : AppCompatActivity() {
 
     private val viewModel by viewModel<PlayerViewModel>()
 
+    private lateinit var currentTrack: Track
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -36,9 +37,14 @@ class PlayerActivity() : AppCompatActivity() {
             viewModel.playbackControl()
         }
 
+        binding.btnFavorite.setOnClickListener {
+            viewModel.onFavoriteClicked(currentTrack)
+        }
+
         findViewById<Toolbar>(R.id.tbBackFromPlayer).setNavigationOnClickListener {
             finish()
         }
+
         viewModel.observeState().observe(this) {
             binding.btnPlay.isEnabled = it.isPlayButtonEnabled
             if (it.isButtonPaused)
@@ -46,6 +52,14 @@ class PlayerActivity() : AppCompatActivity() {
             else
                 binding.btnPlay.setImageResource(R.drawable.dark_mode_play_icon)
             binding.tvCurrentTime.text = it.progress
+        }
+
+        viewModel.observeFavorite().observe(this) {
+            currentTrack.isFavorite = it
+            if (it)
+                binding.btnFavorite.setImageResource(R.drawable.favorites_icon_added)
+            else
+                binding.btnFavorite.setImageResource(R.drawable.favorite_icon)
         }
 
         setCurrentTrack(track = intent.extras?.getSerializable("track") as Track)
@@ -62,6 +76,7 @@ class PlayerActivity() : AppCompatActivity() {
     }
 
     fun setCurrentTrack(track: Track) {
+        currentTrack = track
         Glide.with(binding.ivAlbumCover)
             .load(track.getCoverArtwork())
             .placeholder(R.drawable.default_album_icon)
@@ -75,6 +90,12 @@ class PlayerActivity() : AppCompatActivity() {
         binding.tvReleaseDate.text = track.getReleaseYear()
         binding.tvPrimaryGenreName.text = track.primaryGenreName
         binding.tvCountry.text = track.country
+        binding.btnFavorite.setImageResource(
+            if (track.isFavorite)
+                R.drawable.favorites_icon_added
+            else
+                R.drawable.favorite_icon
+        )
 
         preparePlayer(track.previewUrl)
     }

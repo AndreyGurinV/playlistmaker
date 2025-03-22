@@ -24,7 +24,7 @@ val searchHistoryModule = module {
         SearchHistory(get(), get())
     }
     single<SearchHistoryRepository> {
-        SearchHistoryRepositoryImpl(get())
+        SearchHistoryRepositoryImpl(get(), get())
     }
 
     single<SearchHistoryInteractor> {

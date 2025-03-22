@@ -22,7 +22,7 @@ val playerModule = module {
         PlayerInteractorImpl(get())
     }
     viewModel {
-        PlayerViewModel(get())
+        PlayerViewModel(get(), get())
     }
 
 }
