@@ -20,7 +20,6 @@ class PlayerActivity() : AppCompatActivity() {
 
     private val viewModel by viewModel<PlayerViewModel>()
 
-    private lateinit var currentTrack: Track
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -38,7 +37,7 @@ class PlayerActivity() : AppCompatActivity() {
         }
 
         binding.btnFavorite.setOnClickListener {
-            viewModel.onFavoriteClicked(currentTrack)
+            viewModel.onFavoriteClicked()
         }
 
         findViewById<Toolbar>(R.id.tbBackFromPlayer).setNavigationOnClickListener {
@@ -55,7 +54,6 @@ class PlayerActivity() : AppCompatActivity() {
         }
 
         viewModel.observeFavorite().observe(this) {
-            currentTrack.isFavorite = it
             if (it)
                 binding.btnFavorite.setImageResource(R.drawable.favorites_icon_added)
             else
@@ -76,7 +74,6 @@ class PlayerActivity() : AppCompatActivity() {
     }
 
     fun setCurrentTrack(track: Track) {
-        currentTrack = track
         Glide.with(binding.ivAlbumCover)
             .load(track.getCoverArtwork())
             .placeholder(R.drawable.default_album_icon)
@@ -96,11 +93,7 @@ class PlayerActivity() : AppCompatActivity() {
             else
                 R.drawable.favorite_icon
         )
-
-        preparePlayer(track.previewUrl)
+        viewModel.preparePlayer(track)
     }
 
-    private fun preparePlayer(url: String) {
-        viewModel.preparePlayer(url)
-    }
 }

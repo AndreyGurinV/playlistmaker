@@ -5,7 +5,7 @@ import com.example.playlistmaker.media.domain.impl.FavoritesInteractorImpl
 import org.koin.dsl.module
 
 val interactorModule = module {
-    single<FavoritesInteractor> {
+    factory<FavoritesInteractor> {
         FavoritesInteractorImpl(get())
     }
 }

@@ -11,7 +11,7 @@ import com.example.playlistmaker.media.data.db.FavoritesEntity
 interface FavoritesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrack(track: FavoritesEntity)
-    @Delete//("DELETE * FROM favorites_table")
+    @Delete
     suspend fun deleteTrack(track: FavoritesEntity)
     @Query("SELECT * FROM favorites_table")
     suspend fun getTracks(): List<FavoritesEntity>

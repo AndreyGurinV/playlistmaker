@@ -10,6 +10,7 @@ import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -25,10 +26,17 @@ class PlayerViewModel(
     fun observeFavorite(): LiveData<Boolean> = favoriteLiveData
 
     private var timerJob: Job? = null
+    private lateinit var currentTrack: Track
 
-    fun preparePlayer(url: String) {
+    fun preparePlayer(track: Track) {
+        currentTrack = track
+        viewModelScope.launch {
+            favoritesInteractor.getTracks().collect{ tracks ->
+                favoriteLiveData.postValue(tracks.find { it.trackId == currentTrack.trackId } != null)
+            }
+        }
         playerIteractor.preparePlayer(
-            url = url,
+            url = track.previewUrl,
             onPreparedListener = {
                 stateLiveData.postValue(PlayerState.Prepared())
             },
@@ -74,17 +82,18 @@ class PlayerViewModel(
         return SimpleDateFormat("mm:ss", Locale.getDefault()).format(playerIteractor.currentPosition()) ?: "00:00"
     }
 
-    fun onFavoriteClicked(track: Track) {
-        if (track.isFavorite) {
+    fun onFavoriteClicked() {
+        if (currentTrack.isFavorite) {
             viewModelScope.launch {
-                favoritesInteractor.removeTrack(track)
+                favoritesInteractor.removeTrack(currentTrack)
             }
             favoriteLiveData.postValue(false)
         } else {
             viewModelScope.launch {
-                favoritesInteractor.addTrack(track)
+                favoritesInteractor.addTrack(currentTrack)
             }
             favoriteLiveData.postValue(true)
         }
+        currentTrack.isFavorite = !currentTrack.isFavorite
     }
 }
