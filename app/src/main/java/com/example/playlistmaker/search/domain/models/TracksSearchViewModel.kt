@@ -84,11 +84,15 @@ class TracksSearchViewModel(
     }
 
     fun load() {
-        renderState(
-            TracksState.History(
-                tracks = searchHistory.load().asList()
-            )
-        )
+        viewModelScope.launch {
+            searchHistory.load().collect{
+                renderState(
+                    TracksState.History(
+                        tracks = it.asList()
+                    )
+                )
+            }
+        }
     }
 
     fun addToHistory(track: Track) {

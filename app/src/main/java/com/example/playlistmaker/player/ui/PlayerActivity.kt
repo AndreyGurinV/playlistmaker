@@ -36,9 +36,14 @@ class PlayerActivity() : AppCompatActivity() {
             viewModel.playbackControl()
         }
 
+        binding.btnFavorite.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
+
         findViewById<Toolbar>(R.id.tbBackFromPlayer).setNavigationOnClickListener {
             finish()
         }
+
         viewModel.observeState().observe(this) {
             binding.btnPlay.isEnabled = it.isPlayButtonEnabled
             if (it.isButtonPaused)
@@ -46,6 +51,13 @@ class PlayerActivity() : AppCompatActivity() {
             else
                 binding.btnPlay.setImageResource(R.drawable.dark_mode_play_icon)
             binding.tvCurrentTime.text = it.progress
+        }
+
+        viewModel.observeFavorite().observe(this) {
+            if (it)
+                binding.btnFavorite.setImageResource(R.drawable.favorites_icon_added)
+            else
+                binding.btnFavorite.setImageResource(R.drawable.favorite_icon)
         }
 
         setCurrentTrack(track = intent.extras?.getSerializable("track") as Track)
@@ -75,11 +87,13 @@ class PlayerActivity() : AppCompatActivity() {
         binding.tvReleaseDate.text = track.getReleaseYear()
         binding.tvPrimaryGenreName.text = track.primaryGenreName
         binding.tvCountry.text = track.country
-
-        preparePlayer(track.previewUrl)
+        binding.btnFavorite.setImageResource(
+            if (track.isFavorite)
+                R.drawable.favorites_icon_added
+            else
+                R.drawable.favorite_icon
+        )
+        viewModel.preparePlayer(track)
     }
 
-    private fun preparePlayer(url: String) {
-        viewModel.preparePlayer(url)
-    }
 }
