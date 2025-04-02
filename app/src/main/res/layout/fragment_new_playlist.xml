@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/newPlaylistFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".media.ui.NewPlaylist">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_guideline24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/margins_24" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_guideline24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/margins_24" />
+
+
+    <Toolbar
+        android:id="@+id/tbBackFromNewPlaylist"
+        style="@style/ToolBarStyleWithBack"
+        android:title="@string/new_playlist"
+        >
+    </Toolbar>
+
+    <ImageView
+        android:id="@+id/ivPlaylistImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/size_26"
+        android:src="@drawable/rounded_rectangle"
+        android:scaleType="fitCenter"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline24"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline24"
+        app:layout_constraintTop_toBottomOf="@+id/tbBackFromNewPlaylist"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/etPlaylistName"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        style="@style/AddPlaylistEditTextStyle"
+        android:hint="@string/create_playlist_name"
+        app:boxCornerRadiusBottomEnd="4dp"
+        app:boxCornerRadiusBottomStart="4dp"
+        app:boxCornerRadiusTopEnd="4dp"
+        app:boxCornerRadiusTopStart="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline24"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline24"
+        app:layout_constraintTop_toBottomOf="@+id/ivPlaylistImage"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLength="50"
+            android:maxLines="1"
+            android:inputType="text"
+            android:cursorVisible="true"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            tools:ignore="KeyboardInaccessibleWidget" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/etPlaylistDescription"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        style="@style/AddPlaylistEditTextStyle"
+        android:hint="@string/create_playlist_description"
+        app:boxCornerRadiusBottomEnd="4dp"
+        app:boxCornerRadiusBottomStart="4dp"
+        app:boxCornerRadiusTopEnd="4dp"
+        app:boxCornerRadiusTopStart="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline24"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline24"
+        app:layout_constraintTop_toBottomOf="@+id/etPlaylistName"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLength="50"
+            android:maxLines="1"
+            android:inputType="text"
+            android:cursorVisible="true"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            tools:ignore="KeyboardInaccessibleWidget" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+<!--    <EditText-->
+<!--        android:id="@+id/etPlaylistName"-->
+<!--        style="@style/AddPlaylistEditTextStyle"-->
+<!--        android:layout_marginTop="32dp"-->
+<!--        android:paddingHorizontal="@dimen/find_edit_text_h_padding"-->
+<!--        android:hint="@string/create_playlist_name"-->
+<!--        android:maxLength="50"-->
+<!--        android:maxLines="1"-->
+<!--        android:inputType="text"-->
+<!--        android:cursorVisible="true"-->
+<!--        android:imeOptions="actionDone"-->
+<!--        android:singleLine="true"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/right_guideline24"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/left_guideline24"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/ivPlaylistImage"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/etPlaylistDescription"-->
+<!--        style="@style/AddPlaylistEditTextStyle"-->
+<!--        android:layout_marginTop="32dp"-->
+<!--        android:paddingHorizontal="@dimen/find_edit_text_h_padding"-->
+<!--        android:hint="@string/create_playlist_description"-->
+<!--        android:maxLength="50"-->
+<!--        android:maxLines="1"-->
+<!--        android:inputType="text"-->
+<!--        android:cursorVisible="true"-->
+<!--        android:imeOptions="actionDone"-->
+<!--        android:singleLine="true"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/right_guideline24"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/left_guideline24"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/etPlaylistName"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        />-->
+
+    <TextView
+        android:id="@+id/btnCreatePlaylist"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_gravity="center"
+        android:paddingTop="14dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:textFontWeight="500"
+        android:textSize="16dp"
+        android:text="@string/create_playlist"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline24"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:clickable="true"
+        android:background="@drawable/button_selector"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

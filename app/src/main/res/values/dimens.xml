@@ -21,6 +21,7 @@
     <dimen name="size_51">51dp</dimen>
     <dimen name="setttings_menu_items_height">61dp</dimen>
     <dimen name="size_100">100dp</dimen>
+    <dimen name="frame_border_1">1sp</dimen>
     <dimen name="track_info_font_size">11sp</dimen>
     <dimen name="setttings_menu_items_font_size">16sp</dimen>
     <dimen name="font_size_13">13sp</dimen>

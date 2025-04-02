@@ -19,4 +19,8 @@ class FavoritesInteractorImpl(
     override suspend fun getTracks(): Flow<List<Track>> {
         return favoritesRepository.getTracks()
     }
+
+    override suspend fun addTrackPlaylist(track: Track) {
+        favoritesRepository.addTrackPlaylist(track)
+    }
 }

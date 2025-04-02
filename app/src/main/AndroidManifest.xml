@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".player.ui.PlayerActivity"
+            android:name=".player.ui.PlayerFragment"
             android:exported="false" />
     </application>
 

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <ImageView
+        android:id="@+id/ivPlaylistImageItem"
+        android:layout_width = "160dp"
+        android:layout_height="160dp"
+        android:layout_marginStart="@dimen/margin_album_13"
+        android:layout_marginTop="@dimen/margin_album_4"
+        android:layout_marginBottom="@dimen/margin_album_4"
+        android:src="@drawable/default_album_icon"
+        />
+
+    <TextView
+        android:id="@+id/tvPlaylistTitleItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/icon_padding"
+        android:layout_marginTop="@dimen/margin_text_14"
+        android:gravity="start"
+        android:text="No Reply"
+        android:maxLines="1"
+        android:layout_gravity="start"
+        android:textColor="?attr/colorPrimary"
+        style="@style/TrackNameTextStyle"
+        android:ellipsize="end"
+        />
+
+    <TextView
+        android:id="@+id/tvCountTracksItem"
+        android:paddingStart="@dimen/icon_padding"
+        android:text="0"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_weight="1"
+        style="@style/TrackInfoTextStyle"/>
+
+
+</LinearLayout>
+

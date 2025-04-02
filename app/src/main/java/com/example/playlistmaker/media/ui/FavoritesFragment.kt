@@ -1,17 +1,17 @@
 package com.example.playlistmaker.media.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavoritesBinding
+import com.example.playlistmaker.main.ui.CurrentTrackStorage
 import com.example.playlistmaker.media.domain.models.FavoritesFragmentViewModel
-import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.TracksAdapter
 import kotlinx.coroutines.delay
@@ -26,10 +26,6 @@ class FavoritesFragment : Fragment() {
 
     private val viewModel by viewModel<FavoritesFragmentViewModel>()
     private lateinit var binding: FragmentFavoritesBinding
-
-    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        viewModel.loadFavorites()
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -46,9 +42,10 @@ class FavoritesFragment : Fragment() {
 
         adapter = TracksAdapter(trackList) {
             if (clickDebounce()) {
-                val displayIntent = Intent(requireContext(), PlayerActivity::class.java)
-                displayIntent.putExtra("track", it)
-                resultLauncher.launch(displayIntent)
+                (requireActivity() as CurrentTrackStorage).setCurrentTrack(it)
+                findNavController().navigate(
+                    R.id.playerFragment
+                )
             }
         }
         binding.rvFavorites.adapter = adapter
