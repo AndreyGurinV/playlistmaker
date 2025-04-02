@@ -1,6 +1,7 @@
 package com.example.playlistmaker.media.data
 
 import com.example.playlistmaker.media.data.db.FavoritesEntity
+import com.example.playlistmaker.media.data.db.TracksEntity
 import com.example.playlistmaker.media.data.db.dao.FavoritesDao
 import com.example.playlistmaker.media.data.db.dao.TracksDao
 import com.example.playlistmaker.media.domain.db.FavoritesRepository
@@ -27,7 +28,7 @@ class FavoritesRepositoryImpl(
     }
 
     override suspend fun addTrackPlaylist(track: Track) {
-        tracksDao.insertTrack(convertFromTrack(track))
+        tracksDao.insertTrackForPlaylist(convertFromTrackToTracksEntity(track))
     }
 
     private fun convertFromFavoritesEntity(favoritesEntity: List<FavoritesEntity>): List<Track> =
@@ -35,4 +36,7 @@ class FavoritesRepositoryImpl(
 
     private fun convertFromTrack(track: Track): FavoritesEntity =
         trackDbConverter.map(track)
+
+    private fun convertFromTrackToTracksEntity(track: Track): TracksEntity =
+        trackDbConverter.mapToTracksEntity(track)
 }

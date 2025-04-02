@@ -1,7 +1,5 @@
 package com.example.playlistmaker.media.ui
 
-import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -12,6 +10,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
@@ -28,8 +27,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
-import java.text.SimpleDateFormat
-import java.util.Date
 
 class NewPlaylist : Fragment() {
 
@@ -39,7 +36,7 @@ class NewPlaylist : Fragment() {
 
     private var imageUri: Uri? = null
 
-    val pickMedia =
+    private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             imageUri = uri
             if (uri != null) {
@@ -86,7 +83,7 @@ class NewPlaylist : Fragment() {
             viewModel.createNewPlaylist(
                 binding.editTextName.text.toString(),
                 binding.editTextDescription.text.toString(),
-                imageUri?.let { saveImageToPrivateStorage(it) }?: ""
+                imageUri?.let { saveImageToPrivateStorage(it, binding.editTextName.text.toString()) }?: ""
             )
             onNewPlaylistCreated(binding.etPlaylistName.editText?.text.toString())
             findNavController().popBackStack()
@@ -118,20 +115,34 @@ class NewPlaylist : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                if(haveUnsavedData()) {
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("Завершить создание плейлиста?")
+                        .setMessage("Все несохраненные данные будут потеряны")
+                        .setNeutralButton("Отмена") { _, _ ->
+                        }
+                        .setPositiveButton("Завершить") { _, _ ->
+                            findNavController().popBackStack()
+                        }
+                        .show()
+                } else {
+                    findNavController().popBackStack()
+                }
+            }
+        })
         binding = FragmentNewPlaylistBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    @SuppressLint("SimpleDateFormat")
-    private fun saveImageToPrivateStorage(uri: Uri): String {
+    private fun saveImageToPrivateStorage(uri: Uri, playlistName: String): String {
         val contentResolver = requireActivity().applicationContext.contentResolver
-        val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        contentResolver.takePersistableUriPermission(uri, takeFlags)
-        val filePath = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
+        val filePath = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), playlistName)
         if (!filePath.exists()){
             filePath.mkdirs()
         }
-        val file = File(filePath, "${SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(Date(System.currentTimeMillis()))}.jpg")
+        val file = File(filePath, "cover.jpg")
         val inputStream = contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
         BitmapFactory

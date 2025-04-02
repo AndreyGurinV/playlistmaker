@@ -152,7 +152,7 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:textColor">@color/back_night</item>
-        <item name="android:textColorHint">@color/white</item>
+        <item name="android:textColorHint">@color/back_night</item>
         <item name="hintTextColor">@color/back</item>
         <item name="boxStrokeColor">@drawable/text_input_box_stroke</item>
     </style>
