@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/ivPlaylistImageItemBS"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/playlist_cover_card"
         android:layout_width="@dimen/album_image_size"
         android:layout_height="@dimen/album_image_size"
         android:layout_marginStart="@dimen/margin_album_13"
         android:layout_marginTop="@dimen/margin_album_4"
         android:layout_marginBottom="@dimen/margin_album_4"
-        android:src="@drawable/default_album_icon"
-        />
+        app:cardCornerRadius="2dp"
+        app:cardElevation="0dp"
+        android:background="?attr/colorPrimary">
+        <ImageView
+            android:id="@+id/ivPlaylistImageItemBS"
+            android:layout_width = "match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_album_icon"
+            />
+    </androidx.cardview.widget.CardView>
 
     <LinearLayout
         android:layout_width="match_parent"

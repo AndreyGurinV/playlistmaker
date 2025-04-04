@@ -18,8 +18,7 @@ class PlaylistsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         Glide.with(playlistImageItem)
             .load(playlistDto.pathToImage)
             .placeholder(R.drawable.default_album_icon)
-            .fitCenter()
-            .transform(RoundedCorners(2))
+            .transform(RoundedCorners(8))
             .into(playlistImageItem)
         title.text = playlistDto.playlistTitle
         countTracks.text = "${playlistDto.tracksCount} треков"

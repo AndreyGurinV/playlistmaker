@@ -18,7 +18,6 @@ class PlaylistsViewHolderBS(itemView: View): RecyclerView.ViewHolder(itemView) {
         Glide.with(playlistImageItem)
             .load(playlistDto.pathToImage)
             .placeholder(R.drawable.default_album_icon)
-            .fitCenter()
             .transform(RoundedCorners(2))
             .into(playlistImageItem)
         title.text = playlistDto.playlistTitle

@@ -43,7 +43,6 @@ class NewPlaylist : Fragment() {
                 Glide.with(binding.ivPlaylistImage)
                     .load(uri)
                     .placeholder(R.drawable.default_album_icon)
-                    .fitCenter()
                     .transform(RoundedCorners(8))
                     .into(binding.ivPlaylistImage)
 
@@ -62,19 +61,7 @@ class NewPlaylist : Fragment() {
         }
 
         binding.tbBackFromNewPlaylist.setNavigationOnClickListener {
-            if(haveUnsavedData()) {
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Завершить создание плейлиста?")
-                    .setMessage("Все несохраненные данные будут потеряны")
-                    .setNeutralButton("Отмена") { _, _ ->
-                    }
-                    .setPositiveButton("Завершить") { _, _ ->
-                        findNavController().popBackStack()
-                    }
-                    .show()
-            } else {
-                findNavController().popBackStack()
-            }
+            checkForUnsavedData()
         }
 
         binding.btnCreatePlaylist.isEnabled = false
@@ -117,19 +104,7 @@ class NewPlaylist : Fragment() {
     ): View {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
-                if(haveUnsavedData()) {
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setTitle("Завершить создание плейлиста?")
-                        .setMessage("Все несохраненные данные будут потеряны")
-                        .setNeutralButton("Отмена") { _, _ ->
-                        }
-                        .setPositiveButton("Завершить") { _, _ ->
-                            findNavController().popBackStack()
-                        }
-                        .show()
-                } else {
-                    findNavController().popBackStack()
-                }
+                checkForUnsavedData()
             }
         })
         binding = FragmentNewPlaylistBinding.inflate(inflater, container, false)
@@ -155,10 +130,21 @@ class NewPlaylist : Fragment() {
         (requireActivity() as CallBackInterface).showMessage("Плейлист $name создан!")
     }
 
-    private fun haveUnsavedData(): Boolean {
-        return binding.editTextName.text.toString().isNotEmpty() ||
+    private fun checkForUnsavedData(){
+        if(binding.editTextName.text.toString().isNotEmpty() ||
             binding.editTextDescription.text.toString().isNotEmpty() ||
-            imageUri != null
+            imageUri != null) {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Завершить создание плейлиста?")
+                .setMessage("Все несохраненные данные будут потеряны")
+                .setNeutralButton("Отмена") { _, _ ->
+                }
+                .setPositiveButton("Завершить") { _, _ ->
+                    findNavController().popBackStack()
+                }
+                .show()
+        } else {
+            findNavController().popBackStack()
+        }
     }
-
 }
