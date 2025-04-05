@@ -21,6 +21,19 @@ class PlaylistsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             .transform(RoundedCorners(8))
             .into(playlistImageItem)
         title.text = playlistDto.playlistTitle
-        countTracks.text = "${playlistDto.tracksCount} треков"
+        countTracks.text = formatTracks(playlistDto.tracksCount.toInt())
     }
+
+    private fun formatTracks(count: Int): String {
+        val lastTwoDigits = count % 100
+        val lastDigit = count % 10
+
+        return when {
+            lastTwoDigits in 11..19 -> "$count треков"
+            lastDigit == 1 -> "$count трек"
+            lastDigit in 2..4 -> "$count трека"
+            else -> "$count треков"
+        }
+    }
+
 }

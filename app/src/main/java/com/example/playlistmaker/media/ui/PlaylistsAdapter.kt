@@ -8,6 +8,7 @@ import com.example.playlistmaker.media.data.dto.PlaylistDto
 
 class PlaylistsAdapter(
     private val items: List<PlaylistDto>,
+    private val onItemClick: (playlist: PlaylistDto) -> Unit
 ): RecyclerView.Adapter<PlaylistsViewHolder> () {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistsViewHolder {
@@ -17,6 +18,9 @@ class PlaylistsAdapter(
 
     override fun onBindViewHolder(holder: PlaylistsViewHolder, position: Int) {
         holder.bind(items[position])
+        holder.itemView.setOnClickListener{
+            onItemClick(items[holder.adapterPosition])
+        }
     }
 
     override fun getItemCount(): Int {

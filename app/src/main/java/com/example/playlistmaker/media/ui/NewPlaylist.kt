@@ -10,6 +10,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,6 +23,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.example.playlistmaker.main.ui.CallBackInterface
+import com.example.playlistmaker.media.data.dto.PlaylistDto
 import com.example.playlistmaker.media.domain.models.NewPlaylistsFragmentViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,6 +37,7 @@ class NewPlaylist : Fragment() {
     private val viewModel by viewModel<NewPlaylistsFragmentViewModel>()
 
     private var imageUri: Uri? = null
+    private var currentPlaylist: PlaylistDto? = null
 
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -45,8 +48,6 @@ class NewPlaylist : Fragment() {
                     .placeholder(R.drawable.default_album_icon)
                     .transform(RoundedCorners(8))
                     .into(binding.ivPlaylistImage)
-
-
             } else {
                 println("PhotoPicker - No media selected")
             }
@@ -59,20 +60,49 @@ class NewPlaylist : Fragment() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        currentPlaylist = (requireActivity() as CallBackInterface).getCurrentPlaylist()
+        imageUri = null
+        if (currentPlaylist == null) {
+            binding.btnCreatePlaylist.text = resources.getText(R.string.create_playlist)
+            binding.tbBackFromNewPlaylist.setTitle(R.string.new_playlist)
+            binding.btnCreatePlaylist.isEnabled = false
+        } else {
+            binding.btnCreatePlaylist.text = resources.getText(R.string.save_playlist)
+            binding.btnCreatePlaylist.isEnabled = true
+            binding.tbBackFromNewPlaylist.setTitle(R.string.edit_playlist)
+            Glide.with(binding.ivPlaylistImage)
+                .load(currentPlaylist!!.pathToImage)
+                .placeholder(R.drawable.default_album_icon)
+                .transform(RoundedCorners(8))
+                .into(binding.ivPlaylistImage)
+            binding.editTextName.setText(currentPlaylist!!.playlistTitle)
+            binding.editTextDescription.setText(currentPlaylist!!.playlistDescription)
+        }
 
         binding.tbBackFromNewPlaylist.setNavigationOnClickListener {
             checkForUnsavedData()
         }
 
-        binding.btnCreatePlaylist.isEnabled = false
-
         binding.btnCreatePlaylist.setOnClickListener {
-            viewModel.createNewPlaylist(
-                binding.editTextName.text.toString(),
-                binding.editTextDescription.text.toString(),
-                imageUri?.let { saveImageToPrivateStorage(it, binding.editTextName.text.toString()) }?: ""
-            )
-            onNewPlaylistCreated(binding.etPlaylistName.editText?.text.toString())
+            if (currentPlaylist == null) {
+                viewModel.createNewPlaylist(
+                    binding.editTextName.text.toString(),
+                    binding.editTextDescription.text.toString(),
+                    imageUri?.let { saveImageToPrivateStorage(it, binding.editTextName.text.toString()) }?: ""
+                )
+                onNewPlaylistCreated(binding.etPlaylistName.editText?.text.toString())
+            } else {
+                viewModel.savePlaylist(
+                    PlaylistDto(
+                        id = currentPlaylist!!.id,
+                        playlistTitle = binding.editTextName.text.toString(),
+                        playlistDescription = binding.editTextDescription.text.toString(),
+                        pathToImage = imageUri?.let { saveImageToPrivateStorage(it, binding.editTextName.text.toString()) }?: currentPlaylist!!.pathToImage,
+                        tracksIds = currentPlaylist!!.tracksIds,
+                        tracksCount = currentPlaylist!!.tracksCount
+                    )
+                )
+            }
             findNavController().popBackStack()
         }
 
@@ -127,10 +157,14 @@ class NewPlaylist : Fragment() {
     }
 
     private fun onNewPlaylistCreated(name: String) {
-        (requireActivity() as CallBackInterface).showMessage("Плейлист $name создан!")
+        Toast.makeText(requireContext(), "Плейлист $name создан!", Toast.LENGTH_LONG).show()
     }
 
     private fun checkForUnsavedData(){
+        if (currentPlaylist != null) {
+            findNavController().popBackStack()
+            return
+        }
         if(binding.editTextName.text.toString().isNotEmpty() ||
             binding.editTextDescription.text.toString().isNotEmpty() ||
             imageUri != null) {

@@ -51,5 +51,19 @@ class TrackDbConverter {
         )
     }
 
-
+    fun mapFromTracksEntity(tracksEntity: TracksEntity): Track {
+        return Track(
+            tracksEntity.id.toInt(),
+            tracksEntity.trackName,
+            tracksEntity.artistName,
+            tracksEntity.trackTimeMillis,
+            tracksEntity.artworkUrl100,
+            tracksEntity.collectionName,
+            tracksEntity.releaseDate,
+            tracksEntity.primaryGenreName,
+            tracksEntity.country,
+            tracksEntity.previewUrl,
+            true
+        )
+    }
 }

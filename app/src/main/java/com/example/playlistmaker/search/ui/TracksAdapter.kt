@@ -8,7 +8,8 @@ import com.example.playlistmaker.search.domain.models.Track
 
 class TracksAdapter(
     private val items: List<Track>,
-    private val onItemClick: (track: Track) -> Unit
+    private val onItemClick: (track: Track) -> Unit,
+    private val onItemLongClick: (track: Track) -> Unit = {}
 ) : RecyclerView.Adapter<TracksViewHolder> () {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TracksViewHolder {
@@ -20,6 +21,10 @@ class TracksAdapter(
         holder.bind(items[position])
         holder.itemView.setOnClickListener{
             onItemClick(items[holder.adapterPosition])
+        }
+        holder.itemView.setOnLongClickListener {
+            onItemLongClick(items[holder.adapterPosition])
+            true
         }
     }
 
