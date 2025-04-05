@@ -10,4 +10,6 @@ interface FavoritesInteractor {
 
     suspend fun getTracks(): Flow<List<Track>>
 
+    suspend fun addTrackPlaylist(track: Track)
+
 }

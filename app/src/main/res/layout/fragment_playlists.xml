@@ -1,11 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/playlistsFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/btnUpdateSearch"
+        android:id="@+id/btnNewPlaylist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -35,4 +36,14 @@
         style="@style/PlaceholderEmptyPlaylistTextStyle"
         android:paddingBottom="@dimen/margins_24"
         />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPlaylists"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        />
+
 </LinearLayout>

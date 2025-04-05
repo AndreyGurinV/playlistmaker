@@ -1,6 +1,7 @@
 package com.example.playlistmaker.media.data
 
 import com.example.playlistmaker.media.data.db.FavoritesEntity
+import com.example.playlistmaker.media.data.db.TracksEntity
 import com.example.playlistmaker.search.domain.models.Track
 
 class TrackDbConverter {
@@ -34,4 +35,21 @@ class TrackDbConverter {
             true
         )
     }
+
+    fun mapToTracksEntity(track: Track): TracksEntity {
+        return TracksEntity(
+            track.trackId.toString(),
+            track.trackName,
+            track.artistName,
+            track.trackTimeMillis,
+            track.artworkUrl100,
+            track.collectionName,
+            track.releaseDate,
+            track.primaryGenreName,
+            track.country,
+            track.previewUrl
+        )
+    }
+
+
 }

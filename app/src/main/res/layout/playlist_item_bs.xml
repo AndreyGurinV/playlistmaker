@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/playlist_cover_card"
+        android:layout_width="@dimen/album_image_size"
+        android:layout_height="@dimen/album_image_size"
+        android:layout_marginStart="@dimen/margin_album_13"
+        android:layout_marginTop="@dimen/margin_album_4"
+        android:layout_marginBottom="@dimen/margin_album_4"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="0dp"
+        android:background="?attr/colorPrimary">
+        <ImageView
+            android:id="@+id/ivPlaylistImageItemBS"
+            android:layout_width = "match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_album_icon"
+            />
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/tvPlaylistTitleItemBS"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/icon_padding"
+            android:layout_marginTop="@dimen/margin_text_14"
+            android:gravity="start"
+            android:text="No Reply"
+            android:maxLines="1"
+            android:layout_gravity="start"
+            android:textColor="?attr/colorPrimary"
+            style="@style/TrackNameTextStyle"
+            android:ellipsize="end"
+            />
+
+        <TextView
+            android:id="@+id/tvCountTracksItemBS"
+            android:paddingStart="@dimen/icon_padding"
+            android:text="0 tracks"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_weight="1"
+            style="@style/TrackInfoTextStyle"/>
+    </LinearLayout>
+
+</LinearLayout>
+

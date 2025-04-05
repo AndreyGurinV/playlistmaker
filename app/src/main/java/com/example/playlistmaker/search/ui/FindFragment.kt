@@ -1,7 +1,6 @@
 package com.example.playlistmaker.search.ui
 
 import android.content.Context.INPUT_METHOD_SERVICE
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,9 +14,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFindBinding
-import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.main.ui.CurrentTrackStorage
 import com.example.playlistmaker.search.data.TracksState
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TracksSearchViewModel
@@ -46,12 +47,12 @@ class FindFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         ViewCompat.setOnApplyWindowInsetsListener(binding.findFragment) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        isClickAllowed = true
 
         binding.btnUpdateSearch.setOnClickListener { sendSearchRequest() }
         binding.btnClearSearchHistory.setOnClickListener {
@@ -105,9 +106,13 @@ class FindFragment : Fragment() {
                 if (binding.tvSearchHistory.isVisible) {
                     viewModel.load()
                 }
-                val displayIntent = Intent(requireContext(), PlayerActivity::class.java)
-                displayIntent.putExtra("track", it)
-                startActivity(displayIntent)
+                (requireActivity() as CurrentTrackStorage).setCurrentTrack(it)
+                findNavController().navigate(
+                    R.id.playerFragment
+                )
+//                val displayIntent = Intent(requireContext(), PlayerFragment::class.java)
+//                displayIntent.putExtra("track", it)
+//                startActivity(displayIntent)
             }
         }
         binding.recyclerView.adapter = adapter
@@ -229,6 +234,7 @@ class FindFragment : Fragment() {
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
         const val SEARCH_TEXT_DEF = ""
+        const val TRACK_BUNDLE = "track"
 
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
