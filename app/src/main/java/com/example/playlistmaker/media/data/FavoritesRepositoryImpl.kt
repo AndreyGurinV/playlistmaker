@@ -3,6 +3,7 @@ package com.example.playlistmaker.media.data
 import com.example.playlistmaker.media.data.db.FavoritesEntity
 import com.example.playlistmaker.media.data.db.TracksEntity
 import com.example.playlistmaker.media.data.db.dao.FavoritesDao
+import com.example.playlistmaker.media.data.db.dao.PlaylistDao
 import com.example.playlistmaker.media.data.db.dao.TracksDao
 import com.example.playlistmaker.media.domain.db.FavoritesRepository
 import com.example.playlistmaker.search.domain.models.Track
@@ -12,7 +13,8 @@ import kotlinx.coroutines.flow.flow
 class FavoritesRepositoryImpl(
     private val favoritesDao: FavoritesDao,
     private val trackDbConverter: TrackDbConverter,
-    private val tracksDao: TracksDao
+    private val tracksDao: TracksDao,
+    private val playlistDao: PlaylistDao
 ) : FavoritesRepository {
     override suspend fun addTrack(track: Track) {
         favoritesDao.insertTrack(convertFromTrack(track))
@@ -29,6 +31,17 @@ class FavoritesRepositoryImpl(
 
     override suspend fun addTrackPlaylist(track: Track) {
         tracksDao.insertTrackForPlaylist(convertFromTrackToTracksEntity(track))
+    }
+
+    override suspend fun removeTrackPlaylist(track: Track) {
+        val playlists = playlistDao.getPlaylists()
+        var forDel = true
+        playlists.forEach {
+            if (it.tracksIds.split(";").contains(track.trackId.toString()))
+                forDel = false
+        }
+        if (forDel)
+            tracksDao.removeTrack(track.trackId)
     }
 
     private fun convertFromFavoritesEntity(favoritesEntity: List<FavoritesEntity>): List<Track> =

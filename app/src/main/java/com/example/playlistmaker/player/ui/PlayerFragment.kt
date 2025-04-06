@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
-import com.example.playlistmaker.main.ui.CurrentTrackStorage
+import com.example.playlistmaker.main.ui.CallBackInterface
 import com.example.playlistmaker.media.data.dto.PlaylistDto
 import com.example.playlistmaker.player.domain.models.PlayerViewModel
 import com.example.playlistmaker.search.domain.models.Track
@@ -87,6 +87,7 @@ class PlayerFragment() : Fragment() {
         }
 
         binding.btnNewPlaylistOnBottomSheet.setOnClickListener {
+            (requireActivity() as CallBackInterface).setCurrentPlaylist(null)
             findNavController().navigate(R.id.newPlaylistFragment)
         }
 
@@ -119,7 +120,7 @@ class PlayerFragment() : Fragment() {
             Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
         }
 
-        setCurrentTrack((requireActivity() as CurrentTrackStorage).getCurrentTrack())
+        setCurrentTrack((requireActivity() as CallBackInterface).getCurrentTrack())
 
         adapter = PlaylistsAdapterBS(playlists) {
             viewModel.addTackToPlaylist(it)

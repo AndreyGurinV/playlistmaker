@@ -23,4 +23,8 @@ class FavoritesInteractorImpl(
     override suspend fun addTrackPlaylist(track: Track) {
         favoritesRepository.addTrackPlaylist(track)
     }
+
+    override suspend fun removeTrackPlaylist(track: Track) {
+        favoritesRepository.removeTrackPlaylist(track)
+    }
 }

@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavoritesBinding
-import com.example.playlistmaker.main.ui.CurrentTrackStorage
+import com.example.playlistmaker.main.ui.CallBackInterface
 import com.example.playlistmaker.media.domain.models.FavoritesFragmentViewModel
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.TracksAdapter
@@ -36,18 +36,22 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        isClickAllowed = true
         viewModel.observeState().observe(viewLifecycleOwner){
             showFavorites(it)
         }
 
-        adapter = TracksAdapter(trackList) {
+        adapter = TracksAdapter(
+            trackList,
+            onItemClick = {
             if (clickDebounce()) {
-                (requireActivity() as CurrentTrackStorage).setCurrentTrack(it)
+                (requireActivity() as CallBackInterface).setCurrentTrack(it)
                 findNavController().navigate(
                     R.id.playerFragment
                 )
             }
-        }
+        })
+
         binding.rvFavorites.adapter = adapter
 
         viewModel.loadFavorites()

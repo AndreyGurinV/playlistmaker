@@ -12,4 +12,6 @@ interface FavoritesInteractor {
 
     suspend fun addTrackPlaylist(track: Track)
 
+    suspend fun removeTrackPlaylist(track: Track)
+
 }

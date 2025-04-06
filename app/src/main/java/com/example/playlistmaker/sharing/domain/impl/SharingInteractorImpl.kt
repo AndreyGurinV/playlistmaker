@@ -22,6 +22,10 @@ class SharingInteractorImpl(
         externalNavigator.openEmail(getSupportEmailData())
     }
 
+    override fun sharePlaylist(text: String) {
+        externalNavigator.shareLink(text)
+    }
+
     private fun getShareAppLink(): String =
         context.getString(R.string.link_for_practicum)
 

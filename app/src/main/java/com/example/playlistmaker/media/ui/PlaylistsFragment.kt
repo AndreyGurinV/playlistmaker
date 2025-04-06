@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.example.playlistmaker.main.ui.CallBackInterface
 import com.example.playlistmaker.media.data.dto.PlaylistDto
 import com.example.playlistmaker.media.domain.models.PlaylistsFragmentViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -40,10 +41,14 @@ class PlaylistsFragment : Fragment() {
         }
 
         binding.btnNewPlaylist.setOnClickListener{
+            (requireActivity() as CallBackInterface).setCurrentPlaylist(null)
             findNavController().navigate(R.id.newPlaylistFragment)
         }
 
-        adapter = PlaylistsAdapter(playlists)
+        adapter = PlaylistsAdapter(playlists){
+            (requireActivity() as CallBackInterface).setCurrentPlaylistId(it.id)
+            findNavController().navigate(R.id.playlistFragment)
+        }
         binding.rvPlaylists.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvPlaylists.adapter = adapter
 
