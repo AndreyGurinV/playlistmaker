@@ -95,15 +95,12 @@ class PlaylistFragment : Fragment() {
                 }
             },
             onItemLongClick = {
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Удалить трек")
-                    .setMessage("Вы уверены, что хотите удалить трек из плейлиста?")
-                    .setNeutralButton("Отмена") { _, _ ->
-                    }
-                    .setPositiveButton("Удалить") { _, _ ->
-                        viewModel.removeTrack(it)
-                    }
-                    .show()
+                showAcceptDialog(
+                    "Удалить трек",
+                    "Вы уверены, что хотите удалить трек из плейлиста?"
+                ){
+                    viewModel.removeTrack(it)
+                }
             }
         )
         binding.rvPlaylistsBS.adapter = adapter
@@ -113,16 +110,13 @@ class PlaylistFragment : Fragment() {
         }
 
         binding.tvDeleteMenu.setOnClickListener {
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Удалить плейлист")
-                .setMessage("Хотите удалить плейлист?")
-                .setNeutralButton("Нет") { _, _ ->
-                }
-                .setPositiveButton("Да") { _, _ ->
-                    viewModel.removePlaylist()
-                    findNavController().popBackStack()
-                }
-                .show()
+            showAcceptDialog(
+                "Удалить плейлист",
+                "Хотите удалить плейлист?"
+            ){
+                viewModel.removePlaylist()
+                findNavController().popBackStack()
+            }
         }
         binding.tvShareMenu.setOnClickListener {
             sharePlaylist()
@@ -164,7 +158,11 @@ class PlaylistFragment : Fragment() {
         binding.tvPlaylistDuration.text = "${playlistInfo.tracksTime} минут"
 
         trackList.clear()
-        trackList.addAll(playlistInfo.tracks)
+        playlistInfo.playlist.tracksIds.split(";").reversed().forEach { id ->
+            playlistInfo.tracks.find { it.trackId == id.toInt() }?.let {
+                trackList.add(it)
+            }
+        }
         adapter.notifyDataSetChanged()
     }
 
@@ -198,6 +196,18 @@ class PlaylistFragment : Fragment() {
         } else {
             viewModel.sharePlaylist()
         }
+    }
+
+    private fun showAcceptDialog(title: String, mainText: String, onAccepted: () -> Unit) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(title)
+            .setMessage(mainText)
+            .setNeutralButton("Нет") { _, _ ->
+            }
+            .setPositiveButton("Да") { _, _ ->
+                onAccepted.invoke()
+            }
+            .show()
     }
 
     companion object {
