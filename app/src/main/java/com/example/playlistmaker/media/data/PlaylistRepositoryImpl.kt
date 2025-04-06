@@ -32,7 +32,13 @@ class PlaylistRepositoryImpl(
 
     override suspend fun getTracks(ids: List<String>): Flow<List<Track>> = flow {
         val tracks = tracksDao.getTracks()
-        emit(convertFromTracksEntity(tracks.filter { track -> track.id in ids }))
+        val orderedTracks: MutableList<TracksEntity> = mutableListOf()
+        ids.reversed().forEach { id ->
+            tracks.find { it.id == id }?.let {
+                orderedTracks.add(it)
+            }
+        }
+        emit(convertFromTracksEntity(orderedTracks))
     }
 
     override suspend fun removePlaylist(playlist: PlaylistDto) {

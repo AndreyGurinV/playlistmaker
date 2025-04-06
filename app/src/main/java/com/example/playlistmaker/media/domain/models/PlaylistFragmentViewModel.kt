@@ -59,7 +59,7 @@ class PlaylistFragmentViewModel(
                     playlistTitle = playlistDto.playlistTitle,
                     playlistDescription = playlistDto.playlistDescription,
                     pathToImage = playlistDto.pathToImage,
-                    tracksIds = currentTracks.map { it.trackId }.joinToString(";"),
+                    tracksIds = currentTracks.map { it.trackId }.reversed().joinToString(";"),
                     tracksCount = currentTracks.size.toString()
                 ).apply {
                     playlistDto = this

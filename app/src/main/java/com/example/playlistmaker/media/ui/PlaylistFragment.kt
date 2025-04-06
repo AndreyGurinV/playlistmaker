@@ -158,11 +158,7 @@ class PlaylistFragment : Fragment() {
         binding.tvPlaylistDuration.text = "${playlistInfo.tracksTime} минут"
 
         trackList.clear()
-        playlistInfo.playlist.tracksIds.split(";").reversed().forEach { id ->
-            playlistInfo.tracks.find { it.trackId == id.toInt() }?.let {
-                trackList.add(it)
-            }
-        }
+        trackList.addAll(playlistInfo.tracks)
         adapter.notifyDataSetChanged()
     }
 
