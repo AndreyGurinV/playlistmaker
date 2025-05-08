@@ -2,28 +2,30 @@ package com.example.playlistmaker.main.ui
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityRootBinding
+import com.example.playlistmaker.media.data.dto.PlaylistDto
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 interface CallBackInterface{
-    fun showMessage(message: String)
-}
-
-interface CurrentTrackStorage{
     fun setCurrentTrack(track: Track)
     fun getCurrentTrack(): Track
+    fun setCurrentPlaylistId(playlistId: String)
+    fun getCurrentPlaylistId(): String
+    fun setCurrentPlaylist(playlist: PlaylistDto?)
+    fun getCurrentPlaylist(): PlaylistDto?
 }
 
-class RootActivity : AppCompatActivity(), CallBackInterface, CurrentTrackStorage {
+class RootActivity : AppCompatActivity(), CallBackInterface {
     private lateinit var binding: ActivityRootBinding
     private lateinit var currentTrack: Track
+    private var currentPlaylistId: String = "0"
+    private var currentPlaylist: PlaylistDto? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +43,7 @@ class RootActivity : AppCompatActivity(), CallBackInterface, CurrentTrackStorage
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
+                R.id.playlistFragment,
                 R.id.newPlaylistFragment -> {
                     binding.bottomNavigationView.visibility = View.GONE
                 }
@@ -54,31 +57,27 @@ class RootActivity : AppCompatActivity(), CallBackInterface, CurrentTrackStorage
         }
     }
 
-    override fun showMessage(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-
-//        val bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet)
-//        binding.tvBottomSheetText.text = message
-//        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-//        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-//            override fun onStateChanged(bottomSheet: View, newState: Int) {
-//                if (newState == BottomSheetBehavior.STATE_HIDDEN)
-//                    binding.bottomNavigationView.visibility = View.VISIBLE
-//                else
-//                    binding.bottomNavigationView.visibility = View.GONE
-//            }
-//
-//            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-//            }
-//
-//        })
-    }
-
     override fun setCurrentTrack(track: Track) {
         currentTrack = track
     }
 
     override fun getCurrentTrack(): Track {
         return currentTrack
+    }
+
+    override fun setCurrentPlaylistId(playlistId: String) {
+        currentPlaylistId = playlistId
+    }
+
+    override fun getCurrentPlaylistId(): String {
+        return currentPlaylistId
+    }
+
+    override fun setCurrentPlaylist(playlist: PlaylistDto?) {
+        currentPlaylist = playlist
+    }
+
+    override fun getCurrentPlaylist(): PlaylistDto? {
+        return currentPlaylist
     }
 }

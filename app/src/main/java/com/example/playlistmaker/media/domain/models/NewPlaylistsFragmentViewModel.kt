@@ -28,4 +28,9 @@ class NewPlaylistsFragmentViewModel(
         }
         stateLiveData.postValue(playlistTitle)
     }
+    fun savePlaylist(playlist: PlaylistDto) {
+        viewModelScope.launch {
+            playlistInteractor.insertPlaylist(playlist)
+        }
+    }
 }

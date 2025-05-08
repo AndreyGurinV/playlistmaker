@@ -18,7 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFindBinding
-import com.example.playlistmaker.main.ui.CurrentTrackStorage
+import com.example.playlistmaker.main.ui.CallBackInterface
 import com.example.playlistmaker.search.data.TracksState
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TracksSearchViewModel
@@ -100,21 +100,21 @@ class FindFragment : Fragment() {
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        adapter = TracksAdapter(trackList) {
+        adapter = TracksAdapter(
+            trackList,
+            onItemClick = {
             if (clickDebounce()) {
                 viewModel.addToHistory(track = it)
                 if (binding.tvSearchHistory.isVisible) {
                     viewModel.load()
                 }
-                (requireActivity() as CurrentTrackStorage).setCurrentTrack(it)
+                (requireActivity() as CallBackInterface).setCurrentTrack(it)
                 findNavController().navigate(
                     R.id.playerFragment
                 )
-//                val displayIntent = Intent(requireContext(), PlayerFragment::class.java)
-//                displayIntent.putExtra("track", it)
-//                startActivity(displayIntent)
             }
-        }
+        })
+
         binding.recyclerView.adapter = adapter
         showSearchHistory(true)
 
