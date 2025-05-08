@@ -31,4 +31,5 @@
     <dimen name="title_font_size_24">24sp</dimen>
     <dimen name="title_font_size_18">18sp</dimen>
     <dimen name="error_font_size_19">19sp</dimen>
+    <dimen name="playbackbutton_min_size_24">24sp</dimen>
 </resources>

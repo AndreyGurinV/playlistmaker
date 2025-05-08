@@ -78,7 +78,7 @@ class PlayerFragment() : Fragment() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-        binding.btnPlay.setOnClickListener {
+        binding.btnPlay.click = {
             viewModel.playbackControl()
         }
 
@@ -98,9 +98,9 @@ class PlayerFragment() : Fragment() {
         viewModel.observeState().observe(viewLifecycleOwner) {
             binding.btnPlay.isEnabled = it.isPlayButtonEnabled
             if (it.isButtonPaused)
-                binding.btnPlay.setImageResource(R.drawable.dark_mode_pause_icon)
+                binding.btnPlay.changeState(true)
             else
-                binding.btnPlay.setImageResource(R.drawable.dark_mode_play_icon)
+                binding.btnPlay.changeState(false)
             binding.tvCurrentTime.text = it.progress
         }
 
