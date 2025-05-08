@@ -91,12 +91,13 @@
                 app:layout_constraintBottom_toBottomOf="@+id/btnPlay"
                 />
 
-            <ImageButton
+            <com.example.playlistmaker.player.ui.PlaybackButtonView
                 android:id="@+id/btnPlay"
                 android:layout_width="@dimen/size_100"
                 android:layout_height="@dimen/size_100"
                 android:layout_marginTop="@dimen/size_30"
-                android:src="@drawable/dark_mode_play_icon"
+                app:imagePlayResId="@drawable/dark_mode_play_icon"
+                app:imagePauseResId="@drawable/dark_mode_pause_icon"
                 app:layout_constraintEnd_toStartOf="@+id/btnFavorite"
                 app:layout_constraintStart_toEndOf="@+id/btnAdd"
                 android:background="@android:color/transparent"
