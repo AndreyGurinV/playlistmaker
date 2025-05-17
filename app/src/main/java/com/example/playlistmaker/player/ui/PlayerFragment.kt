@@ -1,10 +1,18 @@
 package com.example.playlistmaker.player.ui
 
+import android.Manifest
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -18,6 +26,7 @@ import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.main.ui.CallBackInterface
 import com.example.playlistmaker.media.data.dto.PlaylistDto
 import com.example.playlistmaker.player.domain.models.PlayerViewModel
+import com.example.playlistmaker.player.service.MusicService
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -30,6 +39,28 @@ class PlayerFragment() : Fragment() {
     private var playlists :ArrayList<PlaylistDto> = arrayListOf()
     lateinit var adapter: PlaylistsAdapterBS
 
+    lateinit var currrentTrack: Track
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            bindMusicService()
+        } else {
+            Toast.makeText(requireContext(), "Can't start foreground service!", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MusicService.MusicServiceBinder
+            viewModel.setAudioPlayerControl(binder.getService())
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            viewModel.removeAudioPlayerControl()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,7 +69,6 @@ class PlayerFragment() : Fragment() {
         binding = FragmentPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -128,19 +158,29 @@ class PlayerFragment() : Fragment() {
         binding.rvPlaylistsBS.layoutManager = LinearLayoutManager(requireContext())
         binding.rvPlaylistsBS.adapter = adapter
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            bindMusicService()
+        }
     }
 
     override fun onPause() {
+        viewModel.showNotification()
         super.onPause()
-        viewModel.pausePlayer()
     }
 
+    override fun onResume() {
+        viewModel.hideNotification()
+        super.onResume()
+    }
     override fun onDestroy() {
+        unbindMusicService()
         super.onDestroy()
-        viewModel.release()
     }
 
     fun setCurrentTrack(track: Track) {
+        currrentTrack = track
         Glide.with(binding.ivAlbumCover)
             .load(track.getCoverArtwork())
             .placeholder(R.drawable.default_album_icon)
@@ -174,4 +214,17 @@ class PlayerFragment() : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
+    private fun bindMusicService() {
+        val intent = Intent(requireContext(), MusicService::class.java).apply {
+            putExtra("song_url", currrentTrack.previewUrl)
+            putExtra("artist_name", currrentTrack.artistName)
+            putExtra("track_name", currrentTrack.trackName)
+        }
+
+        requireContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    private fun unbindMusicService() {
+        requireContext().unbindService(serviceConnection)
+    }
 }
