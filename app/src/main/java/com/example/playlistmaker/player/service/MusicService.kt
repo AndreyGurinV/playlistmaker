@@ -102,12 +102,12 @@ class MusicService : Service(), AudioPlayerControl {
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override fun showNotification() {
         if (player?.isPlaying == true)
-        ServiceCompat.startForeground(
-            this,
-            SERVICE_NOTIFICATION_ID,
-            createServiceNotification(),
-            getForegroundServiceTypeConstant()
-        )
+            ServiceCompat.startForeground(
+                this,
+                SERVICE_NOTIFICATION_ID,
+                createServiceNotification(),
+                getForegroundServiceTypeConstant()
+            )
     }
 
     override fun hideNotification() {
@@ -124,6 +124,7 @@ class MusicService : Service(), AudioPlayerControl {
                 delay(300L)
                 _playerState.value = PlayerState.Playing(getCurrentPlayerPosition())
             }
+            hideNotification()
             _playerState.value = PlayerState.Prepared()
         }
     }
