@@ -1,7 +1,5 @@
 package com.example.playlistmaker.search.domain.models
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.R
@@ -10,6 +8,9 @@ import com.example.playlistmaker.search.domain.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.TracksInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class TracksSearchViewModel(
@@ -18,12 +19,16 @@ class TracksSearchViewModel(
 ): ViewModel()  {
     private var searchJob: Job? = null
 
-    private val stateLiveData = MutableLiveData<TracksState>()
-    fun observeState(): LiveData<TracksState> = stateLiveData
+    private val _stateFlow = MutableStateFlow<TracksState>(TracksState.Content(tracks = emptyList()))
+    val stateFlow = _stateFlow.asStateFlow()
+
+    private val _text = MutableStateFlow("")
+    val text: StateFlow<String> = _text.asStateFlow()
 
     private var latestSearchText: String? = null
 
     fun searchDebounce(changedText: String) {
+        _text.value = changedText
         if (latestSearchText == changedText) {
             return
         }
@@ -80,7 +85,8 @@ class TracksSearchViewModel(
     }
 
     private fun renderState(state: TracksState) {
-        stateLiveData.postValue(state)
+        _stateFlow.value = state
+//        stateLiveData.postValue(state)
     }
 
     fun load() {
