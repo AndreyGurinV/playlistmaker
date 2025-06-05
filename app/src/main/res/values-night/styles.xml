@@ -92,7 +92,7 @@
     <style name="PlaceholderNothingIconStyle">
         <item name="android:layout_width">120dp</item>
         <item name="android:layout_height">120dp</item>
-        <item name="android:src">@drawable/nothing_find_icon_dark</item>
+        <item name="android:src">@drawable/nothing_find_icon</item>
     </style>
     <style name="PlaceholderErrorIconStyle">
         <item name="android:layout_width">120dp</item>

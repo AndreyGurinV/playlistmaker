@@ -1,7 +1,5 @@
 package com.example.playlistmaker.media.domain.models
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.media.domain.db.FavoritesInteractor
@@ -13,21 +11,14 @@ import kotlinx.coroutines.launch
 class FavoritesFragmentViewModel(
     private val favoritesInteractor: FavoritesInteractor
 ) : ViewModel() {
-//    private val stateLiveData = MutableLiveData<List<Track>>()
-//    fun observeState(): LiveData<List<Track>> = stateLiveData
 
     private val _tracksFlow = MutableStateFlow<List<Track>>(emptyList())
     val tracksFlow = _tracksFlow.asStateFlow()
-
-//    init {
-//        loadFavorites()
-//    }
 
     fun loadFavorites(){
         viewModelScope.launch {
             favoritesInteractor.getTracks().collect{
                 _tracksFlow.value = it
-//                stateLiveData.postValue(it)
             }
         }
     }

@@ -12,7 +12,9 @@ class SettingsViewModel(
 ): ViewModel() {
     private val _isDarkTheme = MutableStateFlow(false)
     val isDarkTheme = _isDarkTheme.asStateFlow()
-
+    init {
+        _isDarkTheme.value = getCurrentTheme(false)
+    }
     fun getCurrentTheme(isDark: Boolean): Boolean =
         settingsInteractor.getCurrentTheme(isDark)
 

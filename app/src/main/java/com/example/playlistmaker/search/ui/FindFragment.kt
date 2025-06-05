@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
-import androidx.core.view.isVisible
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.FragmentFindBinding
 import com.example.playlistmaker.main.ui.CallBackInterface
 import com.example.playlistmaker.search.domain.models.TracksSearchViewModel
 import kotlinx.coroutines.delay
@@ -30,9 +29,10 @@ class FindFragment : Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             isClickAllowed = true
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 FindContent(
-                    viewModel.apply { load() },
+                    viewModel,
                     onUpdateClicked = {
                         sendSearchRequest()
                     },
@@ -55,7 +55,7 @@ class FindFragment : Fragment() {
 
     private fun sendSearchRequest() {
         if (searchText.isNotEmpty()) {
-            viewModel.searchDebounce(searchText)
+            viewModel.repeatSearch(searchText)
         }
     }
 

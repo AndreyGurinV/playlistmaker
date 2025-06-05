@@ -1,12 +1,13 @@
 package com.example.playlistmaker.settings.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -31,17 +32,17 @@ import androidx.compose.ui.unit.sp
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.settings.domain.model.SettingsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SettingsContent(viewModel: SettingsViewModel? = null){
+fun SettingsContent(viewModel: SettingsViewModel = koinViewModel()){
     val context = LocalContext.current
-    val isDarkTheme = viewModel?.isDarkTheme?.collectAsState()?.value != false
+    val isDarkTheme = viewModel.isDarkTheme.collectAsState().value
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.systemBars)
-            .background(colorResource(R.color.button_text_night))
+            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
     ) {
         Row {
             Text(
@@ -66,7 +67,13 @@ fun SettingsContent(viewModel: SettingsViewModel? = null){
                 Text(
                     modifier = Modifier
                         .padding(top = 21.dp, start = 16.dp, bottom = 21.dp),
-                    text = stringResource(R.string.dark_theme)
+                    text = stringResource(R.string.dark_theme),
+                    style = TextStyle(
+                        color = colorResource(R.color.button_text),
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.ys_display_regular)),
+                        fontWeight = FontWeight(400)
+                    )
                 )
             }
             Column(
@@ -79,7 +86,7 @@ fun SettingsContent(viewModel: SettingsViewModel? = null){
                     checked = isDarkTheme,
                     onCheckedChange = { it->
                         (context.applicationContext as App).switchTheme(it)
-                        viewModel?.saveCurrentTheme(it)
+                        viewModel.saveCurrentTheme(it)
                     }
                 )
             }
@@ -88,19 +95,19 @@ fun SettingsContent(viewModel: SettingsViewModel? = null){
         SettingsRow(
             stringResource(R.string.share),
             painterResource(id = R.drawable.share_icon)) {
-            viewModel?.shareApp()
+            viewModel.shareApp()
         }
 
         SettingsRow(
             stringResource(R.string.support),
             painterResource(id = R.drawable.support_icon)) {
-            viewModel?.openSupport()
+            viewModel.openSupport()
         }
 
         SettingsRow(
             stringResource(R.string.agreement),
             painterResource(id = R.drawable.agreement_icon)) {
-            viewModel?.openTerms()
+            viewModel.openTerms()
         }
     }
 }
@@ -121,6 +128,12 @@ fun SettingsRow(title: String, image: Painter, onClick: ()-> Unit){
                 modifier = Modifier
                     .padding(top = 21.dp, start = 16.dp, bottom = 21.dp),
                 text = title,
+                style = TextStyle(
+                    color = colorResource(R.color.button_text),
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.ys_display_regular)),
+                    fontWeight = FontWeight(400)
+                )
             )
         }
         Column(

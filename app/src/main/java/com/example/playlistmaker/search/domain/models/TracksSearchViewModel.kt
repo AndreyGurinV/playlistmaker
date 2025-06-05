@@ -26,6 +26,15 @@ class TracksSearchViewModel(
     val text: StateFlow<String> = _text.asStateFlow()
 
     private var latestSearchText: String? = null
+    val tracks = mutableListOf<Track>()
+
+    fun repeatSearch(changedText: String) {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            searchRequest(changedText)
+        }
+    }
 
     fun searchDebounce(changedText: String) {
         _text.value = changedText
@@ -49,8 +58,8 @@ class TracksSearchViewModel(
                 tracksInteractor
                     .searchTracks(newSearchText)
                     .collect{
-                        val tracks = mutableListOf<Track>()
                         if (it.first != null) {
+                            tracks.clear()
                             tracks.addAll(it.first!!)
                         }
 
@@ -86,17 +95,24 @@ class TracksSearchViewModel(
 
     private fun renderState(state: TracksState) {
         _stateFlow.value = state
-//        stateLiveData.postValue(state)
     }
 
     fun load() {
-        viewModelScope.launch {
-            searchHistory.load().collect{
-                renderState(
-                    TracksState.History(
-                        tracks = it.asList()
-                    )
+        if (latestSearchText?.isNotEmpty() == true){
+            renderState(
+                TracksState.Content(
+                    tracks = tracks,
                 )
+            )
+        } else {
+            viewModelScope.launch {
+                searchHistory.load().collect{
+                    renderState(
+                        TracksState.History(
+                            tracks = it.asList()
+                        )
+                    )
+                }
             }
         }
     }
@@ -107,6 +123,11 @@ class TracksSearchViewModel(
 
     fun clear() {
         searchHistory.clear()
+        renderState(
+            TracksState.History(
+                tracks = emptyList()
+            )
+        )
     }
 
     companion object {

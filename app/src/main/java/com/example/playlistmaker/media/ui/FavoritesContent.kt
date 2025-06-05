@@ -4,10 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
@@ -29,17 +31,18 @@ import coil.compose.AsyncImage
 import com.example.playlistmaker.R
 import com.example.playlistmaker.media.domain.models.FavoritesFragmentViewModel
 import com.example.playlistmaker.search.domain.models.Track
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FavoritesContent(
-    viewModel: FavoritesFragmentViewModel? = null,
+    viewModel: FavoritesFragmentViewModel = koinViewModel(),
     onClick:(track: Track)-> Unit
 ){
-    val tracks = viewModel?.tracksFlow?.collectAsState()?.value?:emptyList()
+    val tracks = viewModel.tracksFlow.collectAsState().value
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(start = 13.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
@@ -62,8 +65,12 @@ fun FavoritesContent(
                 ),
             )
         } else {
-            tracks.forEach {
-                TrackItem(it, onClick)
+            LazyColumn(modifier = Modifier
+                .fillMaxWidth()
+            ) {
+                items(tracks.size) {it->
+                    TrackItem(tracks[it], onClick = onClick)
+                }
             }
         }
     }
@@ -98,8 +105,9 @@ fun TrackItem(track: Track, onClick:(track: Track)-> Unit){
         ){
             Text(
                 text = track.trackName,
+                maxLines = 1,
                 style = TextStyle(
-                    color = colorResource(R.color.black),
+                    color = colorResource(R.color.button_text),
                     fontSize = 16.sp,
                     fontFamily = FontFamily(Font(R.font.ys_display_regular)),
                     fontWeight = FontWeight(400)
@@ -108,6 +116,7 @@ fun TrackItem(track: Track, onClick:(track: Track)-> Unit){
             Row {
                 Text(
                     text = track.artistName,
+                    maxLines = 1,
                     style = TextStyle(
                         color = colorResource(R.color.text_grey),
                         fontSize = 11.sp,

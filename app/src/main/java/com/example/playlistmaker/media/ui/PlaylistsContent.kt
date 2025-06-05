@@ -59,6 +59,7 @@ fun PlaylistsContent(
         ) {
             Text(
                 text = stringResource(R.string.new_playlist),
+                color = colorResource(R.color.white_rev)
             )
         }
 
