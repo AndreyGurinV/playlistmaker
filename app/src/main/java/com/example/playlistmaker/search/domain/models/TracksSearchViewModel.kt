@@ -1,7 +1,5 @@
 package com.example.playlistmaker.search.domain.models
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.R
@@ -10,6 +8,9 @@ import com.example.playlistmaker.search.domain.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.TracksInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class TracksSearchViewModel(
@@ -18,12 +19,25 @@ class TracksSearchViewModel(
 ): ViewModel()  {
     private var searchJob: Job? = null
 
-    private val stateLiveData = MutableLiveData<TracksState>()
-    fun observeState(): LiveData<TracksState> = stateLiveData
+    private val _stateFlow = MutableStateFlow<TracksState>(TracksState.Content(tracks = emptyList()))
+    val stateFlow = _stateFlow.asStateFlow()
+
+    private val _text = MutableStateFlow("")
+    val text: StateFlow<String> = _text.asStateFlow()
 
     private var latestSearchText: String? = null
+    val tracks = mutableListOf<Track>()
+
+    fun repeatSearch(changedText: String) {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            searchRequest(changedText)
+        }
+    }
 
     fun searchDebounce(changedText: String) {
+        _text.value = changedText
         if (latestSearchText == changedText) {
             return
         }
@@ -44,8 +58,8 @@ class TracksSearchViewModel(
                 tracksInteractor
                     .searchTracks(newSearchText)
                     .collect{
-                        val tracks = mutableListOf<Track>()
                         if (it.first != null) {
+                            tracks.clear()
                             tracks.addAll(it.first!!)
                         }
 
@@ -80,17 +94,25 @@ class TracksSearchViewModel(
     }
 
     private fun renderState(state: TracksState) {
-        stateLiveData.postValue(state)
+        _stateFlow.value = state
     }
 
     fun load() {
-        viewModelScope.launch {
-            searchHistory.load().collect{
-                renderState(
-                    TracksState.History(
-                        tracks = it.asList()
-                    )
+        if (latestSearchText?.isNotEmpty() == true){
+            renderState(
+                TracksState.Content(
+                    tracks = tracks,
                 )
+            )
+        } else {
+            viewModelScope.launch {
+                searchHistory.load().collect{
+                    renderState(
+                        TracksState.History(
+                            tracks = it.asList()
+                        )
+                    )
+                }
             }
         }
     }
@@ -101,6 +123,11 @@ class TracksSearchViewModel(
 
     fun clear() {
         searchHistory.clear()
+        renderState(
+            TracksState.History(
+                tracks = emptyList()
+            )
+        )
     }
 
     companion object {
